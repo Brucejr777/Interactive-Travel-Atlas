@@ -1,16 +1,25 @@
+import { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { countries, landmarks, events, foods, people } from '../data'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { formatArea, formatNumber, titleCase } from '../lib/utils'
+import { useUserStore } from '../store/useUserStore'
 import LandmarkCard from '../components/LandmarkCard'
 import PersonCard from '../components/PersonCard'
+import Breadcrumbs from '../components/Breadcrumbs'
+import FavoriteButton from '../components/FavoriteButton'
 import NotFoundPage from './NotFoundPage'
 
 export default function CountryPage() {
   const { slug } = useParams<{ slug: string }>()
   const country = countries.find((c) => c.slug === slug)
+  const addRecent = useUserStore((s) => s.addRecent)
 
   useDocumentTitle(country?.name ?? 'Country not found')
+
+  useEffect(() => {
+    if (country) addRecent('country', country.id)
+  }, [country, addRecent])
 
   if (!country) return <NotFoundPage />
 
@@ -21,9 +30,23 @@ export default function CountryPage() {
 
   return (
     <div className="container">
+      <Breadcrumbs
+        items={[
+          { label: 'Countries', to: '/countries' },
+          { label: country.name },
+        ]}
+      />
+
       <header className="detail-hero">
-        <div className="detail-hero__flag" aria-hidden="true">
-          {country.flag}
+        <div className="detail-hero__head">
+          <div className="detail-hero__flag" aria-hidden="true">
+            {country.flag}
+          </div>
+          <FavoriteButton
+            kind="country"
+            id={country.id}
+            label={country.name}
+          />
         </div>
         <h1 className="detail-hero__title">{country.name}</h1>
         <p className="detail-hero__lead">{country.editorialIntro}</p>
@@ -195,6 +218,12 @@ export default function CountryPage() {
               </ul>
             </div>
           )}
+
+          <div className="aside-block">
+            <Link to="/compare" className="btn btn--ghost">
+              Compare with another country
+            </Link>
+          </div>
         </aside>
       </div>
     </div>

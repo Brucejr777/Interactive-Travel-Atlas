@@ -244,3 +244,15 @@ export interface SearchResult {
   themes: Theme[]
   matchTerms: string[]
 }
+
+/** Kinds of entities that can be favorited. */
+export type FavoriteKind = 'country' | 'person' | 'landmark'
+
+/** Kinds of entities tracked in the "recently viewed" list. */
+export type RecentKind = 'country' | 'person'
+
+export interface RecentItem {
+  kind: RecentKind
+  id: string
+  viewedAt: number
+}

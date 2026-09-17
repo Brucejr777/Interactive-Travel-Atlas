@@ -1888,10 +1888,26 @@ export default defineConfig({
     chunkSizeWarningLimit: 900,
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          map: ['react-simple-maps', 'topojson-client'],
-          store: ['zustand'],
+        manualChunks(id) {
+          if (
+            id.includes('node_modules/react-simple-maps') ||
+            id.includes('node_modules/topojson-client')
+          ) {
+            return 'map'
+          }
+
+          if (id.includes('node_modules/zustand')) {
+            return 'store'
+          }
+
+          if (
+            id.includes('node_modules/react/') ||
+            id.includes('node_modules/react-dom/') ||
+            id.includes('node_modules/react-router') ||
+            id.includes('node_modules/scheduler/')
+          ) {
+            return 'react-vendor'
+          }
         },
       },
     },
@@ -2470,6 +2486,7 @@ main {
   margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -3471,8 +3488,8 @@ import {
   Geography,
   ZoomableGroup,
 } from 'react-simple-maps'
+import type { GeoJsonObject } from 'geojson'
 import worldData from 'world-atlas/countries-110m.json'
-import type { Country } from '../lib/types'
 import { isoNumericToCountryId, mapColors } from '../lib/mapConfig'
 import type { WorldMapProps } from './WorldMap'
 
@@ -3502,7 +3519,7 @@ export default function WorldMapBody({
       style={{ width: '100%', height: 'auto' }}
     >
       <ZoomableGroup>
-        <Geographies geography={worldData}>
+        <Geographies geography={worldData as unknown as GeoJsonObject}>
           {({ geographies }) =>
             geographies.map((geo) => {
               const numericId = String(geo.id ?? '')
@@ -3538,12 +3555,8 @@ export default function WorldMapBody({
                   stroke={mapColors.stroke}
                   strokeWidth={0.4}
                   style={{
-                    default: { outline: 'none' },
-                    hover: {
-                      outline: 'none',
-                      cursor: country ? 'pointer' : 'default',
-                    },
-                    pressed: { outline: 'none' },
+                    outline: 'none',
+                    cursor: country ? 'pointer' : 'default',
                   }}
                 />
               )

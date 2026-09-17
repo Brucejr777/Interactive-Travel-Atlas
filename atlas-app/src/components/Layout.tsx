@@ -2,16 +2,22 @@ import { useState } from 'react'
 import { NavLink, Outlet, Link } from 'react-router-dom'
 import { cx } from '../lib/utils'
 import SearchBar from './SearchBar'
+import ScrollTopButton from './ScrollTopButton'
+import RandomCountryButton from './RandomCountryButton'
+import { useUserStore } from '../store/useUserStore'
 
 const navItems = [
   { to: '/', label: 'Home', end: true },
   { to: '/atlas', label: 'Atlas' },
   { to: '/countries', label: 'Countries' },
   { to: '/people', label: 'People' },
+  { to: '/timeline', label: 'Timeline' },
+  { to: '/compare', label: 'Compare' },
 ]
 
 export default function Layout() {
   const [open, setOpen] = useState(false)
+  const favCount = useUserStore((s) => s.favorites.length)
 
   return (
     <div className="app-shell">
@@ -76,6 +82,32 @@ export default function Layout() {
             ))}
           </nav>
 
+          <div className="site-header__actions">
+            <RandomCountryButton />
+            <Link
+              to="/favorites"
+              className="fav-link"
+              aria-label={`Favorites (${favCount})`}
+              title="Favorites"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill={favCount > 0 ? 'currentColor' : 'none'}
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+              </svg>
+              {favCount > 0 && (
+                <span className="fav-link__badge">{favCount}</span>
+              )}
+            </Link>
+          </div>
+
           <div className="site-header__search">
             <SearchBar />
           </div>
@@ -91,6 +123,8 @@ export default function Layout() {
           Built with React, Vite, react-simple-maps, and world-atlas data.
         </div>
       </footer>
+
+      <ScrollTopButton />
     </div>
   )
 }

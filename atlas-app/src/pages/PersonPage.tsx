@@ -1,20 +1,23 @@
+import { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import {
-  people,
-  countries,
-  landmarks,
-  events,
-  foods,
-} from '../data'
+import { people, countries, landmarks, events, foods } from '../data'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { titleCase } from '../lib/utils'
+import { useUserStore } from '../store/useUserStore'
+import Breadcrumbs from '../components/Breadcrumbs'
+import FavoriteButton from '../components/FavoriteButton'
 import NotFoundPage from './NotFoundPage'
 
 export default function PersonPage() {
   const { id } = useParams<{ id: string }>()
   const person = people.find((p) => p.id === id)
+  const addRecent = useUserStore((s) => s.addRecent)
 
   useDocumentTitle(person?.name ?? 'Person not found')
+
+  useEffect(() => {
+    if (person) addRecent('person', person.id)
+  }, [person, addRecent])
 
   if (!person) return <NotFoundPage />
 
@@ -25,9 +28,7 @@ export default function PersonPage() {
   const personLandmarks = landmarks.filter((l) =>
     person.relatedLandmarks.includes(l.id),
   )
-  const personEvents = events.filter((e) =>
-    person.relatedEvents.includes(e.id),
-  )
+  const personEvents = events.filter((e) => person.relatedEvents.includes(e.id))
   const personFoods = foods.filter((f) => person.relatedFoods.includes(f.id))
   const personPeople = people.filter((p) =>
     person.relatedPeople.includes(p.id),
@@ -42,8 +43,19 @@ export default function PersonPage() {
 
   return (
     <div className="container">
+      <Breadcrumbs
+        items={[{ label: 'People', to: '/people' }, { label: person.name }]}
+      />
+
       <header className="detail-hero">
-        <span className="tag">{titleCase(person.themes[0] ?? 'person')}</span>
+        <div className="detail-hero__head">
+          <span className="tag">{titleCase(person.themes[0] ?? 'person')}</span>
+          <FavoriteButton
+            kind="person"
+            id={person.id}
+            label={person.name}
+          />
+        </div>
         <h1 style={{ marginTop: 12, marginBottom: 8 }}>{person.name}</h1>
         <p style={{ color: 'var(--text-dim)', margin: 0 }}>
           {person.role}
@@ -62,9 +74,12 @@ export default function PersonPage() {
               <ul>
                 {personLandmarks.map((l) => (
                   <li key={l.id}>
-                    <strong style={{ color: 'var(--text-head)' }}>
-                      {l.name}
-                    </strong>{' '}
+                    <Link
+                      to={`/landmarks/${l.id}`}
+                      style={{ color: 'var(--text-head)' }}
+                    >
+                      <strong>{l.name}</strong>
+                    </Link>{' '}
                     <span style={{ color: 'var(--text-dim)' }}>
                       {l.city ? `· ${l.city}` : ''}
                     </span>
