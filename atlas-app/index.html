@@ -10,6 +10,26 @@
     />
     <meta name="theme-color" content="#7c3aed" />
     <title>Interactive Travel Atlas</title>
+    <!--
+      Apply the persisted theme before first paint so the page never flashes
+      the wrong colour scheme. The Zustand persist format is
+      { state: {...}, version: n } under the key `atlas:user:v1`.
+    -->
+    <script>
+      ;(function () {
+        try {
+          var raw = window.localStorage.getItem('atlas:user:v1')
+          if (!raw) return
+          var parsed = JSON.parse(raw)
+          var theme = parsed && parsed.state && parsed.state.theme
+          if (theme === 'dark' || theme === 'light') {
+            document.documentElement.setAttribute('data-theme', theme)
+          }
+        } catch (err) {
+          /* ignore — fall back to system preference */
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

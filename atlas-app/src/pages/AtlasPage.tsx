@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { countries } from '../data'
 import { useAtlasStore } from '../store/useAtlasStore'
+import { useUserStore } from '../store/useUserStore'
+import { mapColors } from '../lib/mapConfig'
 import WorldMap from '../components/WorldMap'
 import ThemeFilter from '../components/ThemeFilter'
 import RegionFilter from '../components/RegionFilter'
@@ -17,6 +19,8 @@ export default function AtlasPage() {
   const activeThemes = useAtlasStore((s) => s.activeThemes)
   const activeRegions = useAtlasStore((s) => s.activeRegions)
 
+  const visited = useUserStore((s) => s.visited)
+
   const selected = countries.find((c) => c.id === selectedCountryId) ?? null
   const hovered = countries.find((c) => c.id === hoveredCountryId) ?? null
 
@@ -28,6 +32,8 @@ export default function AtlasPage() {
     return matchesTheme && matchesRegion
   })
 
+  const visitedInAtlas = countries.filter((c) => visited.includes(c.id)).length
+
   return (
     <div className="container">
       <div className="page-head">
@@ -35,6 +41,13 @@ export default function AtlasPage() {
         <p>
           Click a highlighted country to see its culture, landmarks, foods, and
           people. Use the filters to narrow the selection.
+          {visitedInAtlas > 0 && (
+            <>
+              {' '}
+              You’ve marked <strong>{visitedInAtlas}</strong> of{' '}
+              {countries.length} countries as visited.
+            </>
+          )}
         </p>
       </div>
 
@@ -49,6 +62,7 @@ export default function AtlasPage() {
             countries={visibleCountries}
             selectedId={selectedCountryId}
             hoveredId={hoveredCountryId}
+            visitedIds={visited}
             onSelect={setSelectedCountry}
             onHover={setHoveredCountry}
           />
@@ -57,6 +71,36 @@ export default function AtlasPage() {
               {hovered.flag} {hovered.name}
             </div>
           )}
+          <div className="map-legend" aria-hidden="true">
+            <span className="map-legend__item">
+              <span
+                className="map-legend__swatch"
+                style={{ background: mapColors.activeFill }}
+              />
+              In atlas
+            </span>
+            <span className="map-legend__item">
+              <span
+                className="map-legend__swatch"
+                style={{ background: mapColors.landHoverFill }}
+              />
+              Hovered
+            </span>
+            <span className="map-legend__item">
+              <span
+                className="map-legend__swatch"
+                style={{ background: mapColors.landSelectedFill }}
+              />
+              Selected
+            </span>
+            <span className="map-legend__item">
+              <span
+                className="map-legend__swatch"
+                style={{ background: mapColors.visitedFill }}
+              />
+              Visited
+            </span>
+          </div>
         </div>
 
         <aside className="side-panel">

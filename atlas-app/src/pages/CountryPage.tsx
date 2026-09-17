@@ -8,6 +8,8 @@ import LandmarkCard from '../components/LandmarkCard'
 import PersonCard from '../components/PersonCard'
 import Breadcrumbs from '../components/Breadcrumbs'
 import FavoriteButton from '../components/FavoriteButton'
+import VisitedButton from '../components/VisitedButton'
+import NoteEditor from '../components/NoteEditor'
 import NotFoundPage from './NotFoundPage'
 
 export default function CountryPage() {
@@ -42,11 +44,14 @@ export default function CountryPage() {
           <div className="detail-hero__flag" aria-hidden="true">
             {country.flag}
           </div>
-          <FavoriteButton
-            kind="country"
-            id={country.id}
-            label={country.name}
-          />
+          <div className="detail-hero__actions">
+            <VisitedButton countryId={country.id} label={country.name} />
+            <FavoriteButton
+              kind="country"
+              id={country.id}
+              label={country.name}
+            />
+          </div>
         </div>
         <h1 className="detail-hero__title">{country.name}</h1>
         <p className="detail-hero__lead">{country.editorialIntro}</p>
@@ -177,6 +182,10 @@ export default function CountryPage() {
                 {country.themes.map(titleCase).join(', ')}
               </dd>
             </dl>
+          </div>
+
+          <div className="aside-block">
+            <NoteEditor countryId={country.id} countryName={country.name} />
           </div>
 
           {country.neighboringCountries.length > 0 && (

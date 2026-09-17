@@ -14,6 +14,7 @@ export default function WorldMapBody({
   countries,
   selectedId,
   hoveredId,
+  visitedIds,
   onSelect,
   onHover,
 }: WorldMapProps) {
@@ -28,6 +29,11 @@ export default function WorldMapBody({
         countries.flatMap((c) => (c.isoNumeric ? [c.isoNumeric] : [])),
       ),
     [countries],
+  )
+
+  const visitedSet = useMemo(
+    () => new Set(visitedIds ?? []),
+    [visitedIds],
   )
 
   return (
@@ -46,14 +52,17 @@ export default function WorldMapBody({
 
               const isSelected = !!countryId && countryId === selectedId
               const isHovered = !!countryId && countryId === hoveredId
+              const isVisited = !!countryId && visitedSet.has(countryId)
 
               const fill = isSelected
                 ? mapColors.landSelectedFill
                 : isHovered
                   ? mapColors.landHoverFill
-                  : hasCountry
-                    ? mapColors.activeFill
-                    : mapColors.landFill
+                  : isVisited
+                    ? mapColors.visitedFill
+                    : hasCountry
+                      ? mapColors.activeFill
+                      : mapColors.landFill
 
               return (
                 <Geography

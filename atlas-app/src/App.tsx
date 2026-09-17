@@ -14,6 +14,8 @@ import FavoritesPage from './pages/FavoritesPage'
 import ComparePage from './pages/ComparePage'
 import TimelinePage from './pages/TimelinePage'
 import LandmarkPage from './pages/LandmarkPage'
+import QuizPage from './pages/QuizPage'
+import StatsPage from './pages/StatsPage'
 
 export default function App() {
   return (
@@ -30,6 +32,8 @@ export default function App() {
           <Route path="landmarks/:id" element={<LandmarkPage />} />
           <Route path="timeline" element={<TimelinePage />} />
           <Route path="compare" element={<ComparePage />} />
+          <Route path="quiz" element={<QuizPage />} />
+          <Route path="insights" element={<StatsPage />} />
           <Route path="favorites" element={<FavoritesPage />} />
           <Route path="search" element={<SearchPage />} />
           <Route path="*" element={<NotFoundPage />} />

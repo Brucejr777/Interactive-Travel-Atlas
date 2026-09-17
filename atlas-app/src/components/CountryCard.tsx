@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import type { Country } from '../lib/types'
 import { formatArea, formatNumber } from '../lib/utils'
+import { useUserStore } from '../store/useUserStore'
 import FavoriteButton from './FavoriteButton'
 
 interface Props {
@@ -8,8 +9,15 @@ interface Props {
 }
 
 export default function CountryCard({ country }: Props) {
+  const visited = useUserStore((s) => s.visited.includes(country.id))
+
   return (
     <div className="card-wrap">
+      {visited && (
+        <span className="card-wrap__visited" title="You’ve been here">
+          ✓ Visited
+        </span>
+      )}
       <Link to={`/countries/${country.slug}`} className="card">
         <div className="card__flag" aria-hidden="true">
           {country.flag}

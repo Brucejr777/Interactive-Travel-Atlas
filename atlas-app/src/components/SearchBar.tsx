@@ -94,9 +94,10 @@ export default function SearchBar() {
         </svg>
       </span>
       <input
+        id="global-search"
         type="search"
         className="search__input"
-        placeholder="Search countries, people, places…"
+        placeholder="Search countries, people, places…  (⌘K)"
         value={value}
         onChange={(e) => {
           setValue(e.target.value)

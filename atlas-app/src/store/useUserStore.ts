@@ -2,14 +2,32 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { FavoriteKind, RecentItem, RecentKind } from '../lib/types'
 
+/** Colour scheme preference. `system` follows the OS setting. */
+export type ThemePreference = 'light' | 'dark' | 'system'
+
 interface UserState {
-  /** Encoded as `${kind}:${id}` so a single Set-like array can hold everything. */
+  /** Encoded as `${kind}:${id}` so a single array can hold everything. */
   favorites: string[]
   recents: RecentItem[]
+  /** Country IDs the user has marked as visited. */
+  visited: string[]
+  /** Free-form personal notes keyed by country ID. */
+  notes: Record<string, string>
+  /** Persisted colour scheme preference. */
+  theme: ThemePreference
+
   toggleFavorite: (kind: FavoriteKind, id: string) => void
   clearFavorites: () => void
+
   addRecent: (kind: RecentKind, id: string) => void
   clearRecents: () => void
+
+  toggleVisited: (countryId: string) => void
+  clearVisited: () => void
+
+  setNote: (countryId: string, note: string) => void
+
+  setTheme: (theme: ThemePreference) => void
 }
 
 export const favoriteKey = (kind: FavoriteKind, id: string): string =>
@@ -22,6 +40,9 @@ export const useUserStore = create<UserState>()(
     (set) => ({
       favorites: [],
       recents: [],
+      visited: [],
+      notes: {},
+      theme: 'system',
 
       toggleFavorite: (kind, id) => {
         const k = favoriteKey(kind, id)
@@ -48,6 +69,25 @@ export const useUserStore = create<UserState>()(
       },
 
       clearRecents: () => set({ recents: [] }),
+
+      toggleVisited: (countryId) =>
+        set((state) => ({
+          visited: state.visited.includes(countryId)
+            ? state.visited.filter((id) => id !== countryId)
+            : [...state.visited, countryId],
+        })),
+
+      clearVisited: () => set({ visited: [] }),
+
+      setNote: (countryId, note) =>
+        set((state) => {
+          const next = { ...state.notes }
+          if (note.trim()) next[countryId] = note
+          else delete next[countryId]
+          return { notes: next }
+        }),
+
+      setTheme: (theme) => set({ theme }),
     }),
     {
       name: 'atlas:user:v1',

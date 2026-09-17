@@ -27,4 +27,6 @@ export const mapColors = {
   stroke: '#ffffff',
   strokeDark: '#0b0d12',
   activeFill: '#6366f1',
+  /** Fill used for countries the user has marked as visited. */
+  visitedFill: '#16a34a',
 }

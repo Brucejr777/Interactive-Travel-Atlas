@@ -1,10 +1,12 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink, Outlet, Link } from 'react-router-dom'
 import { cx } from '../lib/utils'
 import SearchBar from './SearchBar'
 import ScrollTopButton from './ScrollTopButton'
 import RandomCountryButton from './RandomCountryButton'
+import ThemeToggle from './ThemeToggle'
 import { useUserStore } from '../store/useUserStore'
+import { useTheme } from '../hooks/useTheme'
 
 const navItems = [
   { to: '/', label: 'Home', end: true },
@@ -13,11 +15,32 @@ const navItems = [
   { to: '/people', label: 'People' },
   { to: '/timeline', label: 'Timeline' },
   { to: '/compare', label: 'Compare' },
+  { to: '/quiz', label: 'Quiz' },
+  { to: '/insights', label: 'Insights' },
 ]
 
 export default function Layout() {
   const [open, setOpen] = useState(false)
   const favCount = useUserStore((s) => s.favorites.length)
+
+  useTheme()
+
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        const input = document.getElementById(
+          'global-search',
+        ) as HTMLInputElement | null
+        if (input) {
+          e.preventDefault()
+          input.focus()
+          input.select()
+        }
+      }
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [])
 
   return (
     <div className="app-shell">
@@ -107,6 +130,8 @@ export default function Layout() {
               )}
             </Link>
           </div>
+
+          <ThemeToggle />
 
           <div className="site-header__search">
             <SearchBar />

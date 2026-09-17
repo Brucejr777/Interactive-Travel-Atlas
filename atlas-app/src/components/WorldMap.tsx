@@ -10,6 +10,8 @@ export interface WorldMapProps {
   countries: Country[]
   selectedId?: string | null
   hoveredId?: string | null
+  /** Country IDs the user has marked as visited. */
+  visitedIds?: string[]
   onSelect?: (countryId: string) => void
   onHover?: (countryId: string | null) => void
 }
