@@ -1,0 +1,193 @@
+import type { Food } from '../lib/types'
+
+export const foods: Food[] = [
+  {
+    id: 'f-baguette',
+    name: 'Baguette',
+    countryId: 'fr-france',
+    origin: 'France',
+    description:
+      'A long, crusty loaf defined by French law and daily ritual.',
+    ingredients: ['Wheat flour', 'Water', 'Yeast', 'Salt'],
+    culturalContext:
+      'Bakers must follow strict rules to call a loaf a “baguette de tradition”.',
+    themes: ['food', 'traditions'],
+    relatedLandmarks: [],
+    relatedEvents: [],
+    relatedFoods: ['f-croissant'],
+    relatedPeople: [],
+  },
+  {
+    id: 'f-croissant',
+    name: 'Croissant',
+    countryId: 'fr-france',
+    origin: 'France (from Austrian kipferl)',
+    description: 'A flaky, buttery laminated pastry, a staple of French breakfast.',
+    ingredients: ['Flour', 'Butter', 'Yeast', 'Sugar', 'Salt'],
+    culturalContext:
+      'Its Viennese roots were reshaped in Paris into the crescent we know today.',
+    themes: ['food'],
+    relatedLandmarks: [],
+    relatedEvents: [],
+    relatedFoods: ['f-baguette'],
+    relatedPeople: [],
+  },
+  {
+    id: 'f-pizza',
+    name: 'Pizza Napoletana',
+    countryId: 'it-italy',
+    origin: 'Naples',
+    description:
+      'A wood-fired flatbread with San Marzano tomatoes, mozzarella, and basil.',
+    ingredients: ['00 flour', 'Tomato', 'Mozzarella', 'Basil', 'Olive oil'],
+    culturalContext:
+      'Protected by EU law, with strict rules on ingredients and method.',
+    themes: ['food', 'traditions'],
+    relatedLandmarks: [],
+    relatedEvents: [],
+    relatedFoods: ['f-pasta'],
+    relatedPeople: [],
+  },
+  {
+    id: 'f-pasta',
+    name: 'Pasta',
+    countryId: 'it-italy',
+    origin: 'Italy',
+    description:
+      'Shaped dough made from durum wheat and water, served with countless sauces.',
+    ingredients: ['Durum wheat', 'Water', 'Egg (in some shapes)'],
+    culturalContext:
+      'Each region has its own shapes, sauces, and pairings.',
+    themes: ['food'],
+    relatedLandmarks: [],
+    relatedEvents: [],
+    relatedFoods: ['f-pizza'],
+    relatedPeople: [],
+  },
+  {
+    id: 'f-sushi',
+    name: 'Sushi',
+    countryId: 'jp-japan',
+    origin: 'Japan',
+    description:
+      'Vinegared rice combined with seafood, vegetables, and sometimes egg.',
+    ingredients: ['Rice', 'Rice vinegar', 'Fish', 'Nori', 'Wasabi'],
+    culturalContext:
+      'Edo-period street food that became a global cuisine.',
+    themes: ['food', 'traditions'],
+    relatedLandmarks: [],
+    relatedEvents: [],
+    relatedFoods: ['f-ramen'],
+    relatedPeople: [],
+  },
+  {
+    id: 'f-ramen',
+    name: 'Ramen',
+    countryId: 'jp-japan',
+    origin: 'Japan (from Chinese roots)',
+    description: 'Wheat noodles in a savoury broth, endlessly regional.',
+    ingredients: ['Wheat noodles', 'Broth', 'Pork', 'Miso', 'Soy'],
+    culturalContext:
+      'Every region — Sapporo, Tokyo, Hakata — has its own style.',
+    themes: ['food'],
+    relatedLandmarks: [],
+    relatedEvents: [],
+    relatedFoods: ['f-sushi'],
+    relatedPeople: [],
+  },
+  {
+    id: 'f-tacos',
+    name: 'Tacos',
+    countryId: 'mx-mexico',
+    origin: 'Mexico',
+    description:
+      'Corn or wheat tortillas folded around meats, beans, and salsas.',
+    ingredients: ['Corn tortilla', 'Meat', 'Onion', 'Cilantro', 'Salsa'],
+    culturalContext:
+      'Sold from street stalls across Mexico, with regional variations.',
+    themes: ['food', 'traditions'],
+    relatedLandmarks: [],
+    relatedEvents: [],
+    relatedFoods: ['f-mole'],
+    relatedPeople: [],
+  },
+  {
+    id: 'f-mole',
+    name: 'Mole',
+    countryId: 'mx-mexico',
+    origin: 'Puebla / Oaxaca',
+    description:
+      'A complex sauce with chiles, spices, nuts, and often chocolate.',
+    ingredients: ['Chiles', 'Nuts', 'Spices', 'Chocolate', 'Tomatillos'],
+    culturalContext:
+      'Oaxaca’s seven classic moles are each a regional signature.',
+    themes: ['food', 'traditions'],
+    relatedLandmarks: ['l-casa-azul'],
+    relatedEvents: [],
+    relatedFoods: ['f-tacos'],
+    relatedPeople: ['p-frida-kahlo'],
+  },
+  {
+    id: 'f-burger',
+    name: 'Hamburger',
+    countryId: 'us-united-states',
+    origin: 'United States',
+    description:
+      'A ground-beef patty in a bun, endlessly adapted and globally adopted.',
+    ingredients: ['Beef', 'Bun', 'Lettuce', 'Tomato', 'Cheese'],
+    culturalContext:
+      'A symbol of American diner culture and global fast food.',
+    themes: ['food'],
+    relatedLandmarks: [],
+    relatedEvents: [],
+    relatedFoods: ['f-apple-pie'],
+    relatedPeople: [],
+  },
+  {
+    id: 'f-apple-pie',
+    name: 'Apple Pie',
+    countryId: 'us-united-states',
+    origin: 'United States (from England)',
+    description: 'A double-crust pie filled with spiced apples.',
+    ingredients: ['Apples', 'Flour', 'Butter', 'Sugar', 'Cinnamon'],
+    culturalContext:
+      'The phrase “as American as apple pie” says it all.',
+    themes: ['food', 'traditions'],
+    relatedLandmarks: [],
+    relatedEvents: [],
+    relatedFoods: ['f-burger'],
+    relatedPeople: [],
+  },
+  {
+    id: 'f-pierogi',
+    name: 'Pierogi',
+    countryId: 'pl-poland',
+    origin: 'Poland',
+    description:
+      'Filled dumplings, boiled and then pan-fried, with savoury or sweet fillings.',
+    ingredients: ['Flour', 'Potato', 'Cheese', 'Onion', 'Butter'],
+    culturalContext:
+      'A staple of Polish home cooking and holiday tables.',
+    themes: ['food', 'traditions'],
+    relatedLandmarks: [],
+    relatedEvents: [],
+    relatedFoods: [],
+    relatedPeople: [],
+  },
+  {
+    id: 'f-bobotie',
+    name: 'Bobotie',
+    countryId: 'za-south-africa',
+    origin: 'South Africa',
+    description:
+      'Spiced minced meat baked with an egg custard topping.',
+    ingredients: ['Minced meat', 'Curry powder', 'Eggs', 'Milk', 'Raisins'],
+    culturalContext:
+      'A Cape Malay dish that reflects South Africa’s layered history.',
+    themes: ['food', 'culture'],
+    relatedLandmarks: [],
+    relatedEvents: ['e-apartheid-end'],
+    relatedFoods: [],
+    relatedPeople: [],
+  },
+]

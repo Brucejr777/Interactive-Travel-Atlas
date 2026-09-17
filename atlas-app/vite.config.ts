@@ -9,11 +9,15 @@ export default defineConfig({
     },
   },
   build: {
+    target: 'es2022',
+    sourcemap: false,
+    chunkSizeWarningLimit: 900,
     rollupOptions: {
       output: {
         manualChunks: {
-          map: ['react-simple-maps', 'topojson-client', 'world-atlas'],
-          router: ['react-router-dom'],
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          map: ['react-simple-maps', 'topojson-client'],
+          store: ['zustand'],
         },
       },
     },

@@ -66,7 +66,8 @@ export const people: Person[] = [
     death: '1926',
     role: 'Painter, Impressionist founder',
     countryId: 'fr-france',
-    description: 'Founded French Impressionism and painted the Water Lilies series at Giverny.',
+    description:
+      'Founded French Impressionism and painted the Water Lilies series at Giverny.',
     relatedEvents: ['e-impressionist-movement'],
     relatedLandmarks: ['l-giverny-garden', 'l-orangerie-monet'],
     relatedFoods: [],
@@ -80,7 +81,8 @@ export const people: Person[] = [
     death: '1954',
     role: 'Painter and cultural icon',
     countryId: 'mx-mexico',
-    description: 'Her self-portraits explore identity, pain, and Mexican heritage.',
+    description:
+      'Her self-portraits explore identity, pain, and Mexican heritage.',
     relatedEvents: ['e-mexican-revolution'],
     relatedLandmarks: ['l-casa-azul'],
     relatedFoods: [],
@@ -94,7 +96,8 @@ export const people: Person[] = [
     death: '2014',
     role: 'Poet, memoirist, civil rights activist',
     countryId: 'us-united-states',
-    description: 'Author of I Know Why the Caged Bird Sings and a voice of the American civil rights movement.',
+    description:
+      'Author of I Know Why the Caged Bird Sings and a voice of the American civil rights movement.',
     relatedEvents: ['e-civil-rights-us'],
     relatedLandmarks: ['l-mlk-memorial'],
     relatedFoods: [],
@@ -108,7 +111,8 @@ export const people: Person[] = [
     death: null,
     role: 'Artist, musician, peace activist',
     countryId: 'jp-japan',
-    description: 'Conceptual artist and peace campaigner whose work spans avant-garde film and music.',
+    description:
+      'Conceptual artist and peace campaigner whose work spans avant-garde film and music.',
     relatedEvents: [],
     relatedLandmarks: [],
     relatedFoods: [],
@@ -122,7 +126,8 @@ export const people: Person[] = [
     death: '1849',
     role: 'Ukiyo-e artist',
     countryId: 'jp-japan',
-    description: 'Created The Great Wave off Kanagawa, shaping global perception of Japanese art.',
+    description:
+      'Created The Great Wave off Kanagawa, shaping global perception of Japanese art.',
     relatedEvents: ['e-edo-japan-opening'],
     relatedLandmarks: [],
     relatedFoods: [],
@@ -136,7 +141,8 @@ export const people: Person[] = [
     death: '2013',
     role: 'Anti-apartheid revolutionary and president',
     countryId: 'za-south-africa',
-    description: 'Led South Africa out of apartheid and toward a multiracial democracy.',
+    description:
+      'Led South Africa out of apartheid and toward a multiracial democracy.',
     relatedEvents: ['e-apartheid-end'],
     relatedLandmarks: ['l-robin-island', 'l-union-buildings'],
     relatedFoods: [],

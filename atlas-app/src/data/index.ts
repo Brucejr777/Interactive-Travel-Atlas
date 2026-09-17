@@ -1,0 +1,5 @@
+export { countries } from './countries'
+export { landmarks } from './landmarks'
+export { events } from './events'
+export { foods } from './foods'
+export { people } from './people'

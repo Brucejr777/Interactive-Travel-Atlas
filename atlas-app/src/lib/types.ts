@@ -31,7 +31,14 @@ export interface GeoPoint {
 }
 
 export interface RelatedLink {
-  type: 'country' | 'region' | 'city' | 'landmark' | 'food' | 'event' | 'person'
+  type:
+    | 'country'
+    | 'region'
+    | 'city'
+    | 'landmark'
+    | 'food'
+    | 'event'
+    | 'person'
   id: string
   label: string
 }
@@ -40,7 +47,7 @@ export interface Person {
   id: string
   name: string
   birth?: string
-  death?: string
+  death?: string | null
   role: string
   countryId?: string
   description: string
@@ -157,6 +164,8 @@ export interface CultureBlock {
 
 export interface Country {
   id: string
+  /** ISO 3166-1 numeric code, used to link to world-atlas TopoJSON features. */
+  isoNumeric: string
   name: string
   slug: string
   region: Region
@@ -174,8 +183,8 @@ export interface Country {
   description: string
   editorialIntro: string
   themes: Theme[]
-  heroImage: string
-  galleryImages: string[]
+  heroImage?: string
+  galleryImages?: string[]
   culture: CultureBlock
   foods: string[]
   landmarks: string[]
@@ -192,7 +201,7 @@ export interface FeaturedStory {
   id: string
   title: string
   subtitle: string
-  image: string
+  image?: string
   href: string
   type: 'country' | 'event' | 'landmark' | 'food'
   countryId?: string
@@ -203,7 +212,7 @@ export interface ThemeCategory {
   id: Theme
   name: string
   description: string
-  image: string
+  image?: string
   href: string
   relatedCountryIds: string[]
   relatedEventIds: string[]
@@ -218,7 +227,15 @@ export interface AtlasConfig {
 }
 
 export interface SearchResult {
-  type: 'country' | 'region' | 'city' | 'landmark' | 'food' | 'event' | 'person' | 'tradition'
+  type:
+    | 'country'
+    | 'region'
+    | 'city'
+    | 'landmark'
+    | 'food'
+    | 'event'
+    | 'person'
+    | 'tradition'
   id: string
   label: string
   secondary: string
