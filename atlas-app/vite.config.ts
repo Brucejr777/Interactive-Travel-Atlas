@@ -14,10 +14,26 @@ export default defineConfig({
     chunkSizeWarningLimit: 900,
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          map: ['react-simple-maps', 'topojson-client'],
-          store: ['zustand'],
+        manualChunks(id) {
+          if (
+            id.includes('node_modules/react-simple-maps') ||
+            id.includes('node_modules/topojson-client')
+          ) {
+            return 'map'
+          }
+
+          if (id.includes('node_modules/zustand')) {
+            return 'store'
+          }
+
+          if (
+            id.includes('node_modules/react/') ||
+            id.includes('node_modules/react-dom/') ||
+            id.includes('node_modules/react-router') ||
+            id.includes('node_modules/scheduler/')
+          ) {
+            return 'react-vendor'
+          }
         },
       },
     },

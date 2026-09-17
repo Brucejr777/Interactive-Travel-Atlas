@@ -5,8 +5,8 @@ import {
   Geography,
   ZoomableGroup,
 } from 'react-simple-maps'
+import type { GeoJsonObject } from 'geojson'
 import worldData from 'world-atlas/countries-110m.json'
-import type { Country } from '../lib/types'
 import { isoNumericToCountryId, mapColors } from '../lib/mapConfig'
 import type { WorldMapProps } from './WorldMap'
 
@@ -36,7 +36,7 @@ export default function WorldMapBody({
       style={{ width: '100%', height: 'auto' }}
     >
       <ZoomableGroup>
-        <Geographies geography={worldData}>
+        <Geographies geography={worldData as unknown as GeoJsonObject}>
           {({ geographies }) =>
             geographies.map((geo) => {
               const numericId = String(geo.id ?? '')
@@ -72,12 +72,8 @@ export default function WorldMapBody({
                   stroke={mapColors.stroke}
                   strokeWidth={0.4}
                   style={{
-                    default: { outline: 'none' },
-                    hover: {
-                      outline: 'none',
-                      cursor: country ? 'pointer' : 'default',
-                    },
-                    pressed: { outline: 'none' },
+                    outline: 'none',
+                    cursor: country ? 'pointer' : 'default',
                   }}
                 />
               )

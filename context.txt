@@ -1,1067 +1,4 @@
-=== combine_files.py ===
-import os
-import sys
-
-def combine_files(directory, output_file, exclude_dirs=None, exclude_exts=None):
-    if exclude_dirs is None:
-        exclude_dirs = {'.git', '__pycache__', 'node_modules', '.venv', 'venv', 'env', 'dist', 'build'}
-    if exclude_exts is None:
-        exclude_exts = {'.pyc', '.pyo', '.pyd', '.so', '.dll', '.exe', '.bin', '.obj', '.o', '.a', '.lib', '.jar', '.war', '.ear', '.class'}
-
-    with open(output_file, 'w', encoding='utf-8') as out:
-        for root, dirs, files in os.walk(directory):
-            dirs[:] = [d for d in dirs if d not in exclude_dirs]
-            
-            for file in files:
-                ext = os.path.splitext(file)[1].lower()
-                if ext in exclude_exts:
-                    continue
-                
-                filepath = os.path.join(root, file)
-                relpath = os.path.relpath(filepath, directory)
-                
-                try:
-                    with open(filepath, 'r', encoding='utf-8') as f:
-                        content = f.read()
-                except UnicodeDecodeError:
-                    continue
-                
-                out.write(f'=== {relpath} ===\n')
-                out.write(content)
-                out.write('\n\n')
-
-if __name__ == '__main__':
-    directory = sys.argv[1] if len(sys.argv) > 1 else '.'
-    output_file = sys.argv[2] if len(sys.argv) > 2 else 'context.txt'
-    combine_files(directory, output_file)
-    print(f'Combined files written to {output_file}')
-
-
-=== context.txt ===
-
-
-=== package-lock.json ===
-{
-  "name": "Interactive-Travel-Atlas",
-  "lockfileVersion": 3,
-  "requires": true,
-  "packages": {
-    "": {
-      "dependencies": {
-        "world-atlas": "^2.0.2"
-      },
-      "devDependencies": {
-        "@tailwindcss/postcss": "^4.3.3",
-        "@types/topojson-client": "^3.1.5",
-        "autoprefixer": "^10.6.1",
-        "postcss": "^8.5.28",
-        "tailwindcss": "^4.3.3"
-      }
-    },
-    "node_modules/@alloc/quick-lru": {
-      "version": "5.3.0",
-      "resolved": "https://registry.npmjs.org/@alloc/quick-lru/-/quick-lru-5.3.0.tgz",
-      "integrity": "sha512-U4+70Pc5ZS9osnCBCE5Jha/ciHM+Yp+CNMNC/7HvYbNRk1Ldd+f7qO65W5qfhu/TCv+/ozljlXXe9Nj8419DMA==",
-      "dev": true,
-      "license": "MIT",
-      "engines": {
-        "node": ">=10"
-      },
-      "funding": {
-        "url": "https://github.com/sponsors/sindresorhus"
-      }
-    },
-    "node_modules/@jridgewell/gen-mapping": {
-      "version": "0.3.13",
-      "resolved": "https://registry.npmjs.org/@jridgewell/gen-mapping/-/gen-mapping-0.3.13.tgz",
-      "integrity": "sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@jridgewell/sourcemap-codec": "^1.5.0",
-        "@jridgewell/trace-mapping": "^0.3.24"
-      }
-    },
-    "node_modules/@jridgewell/remapping": {
-      "version": "2.3.5",
-      "resolved": "https://registry.npmjs.org/@jridgewell/remapping/-/remapping-2.3.5.tgz",
-      "integrity": "sha512-LI9u/+laYG4Ds1TDKSJW2YPrIlcVYOwi2fUC6xB43lueCjgxV4lffOCZCtYFiH6TNOX+tQKXx97T4IKHbhyHEQ==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@jridgewell/gen-mapping": "^0.3.5",
-        "@jridgewell/trace-mapping": "^0.3.24"
-      }
-    },
-    "node_modules/@jridgewell/resolve-uri": {
-      "version": "3.1.2",
-      "resolved": "https://registry.npmjs.org/@jridgewell/resolve-uri/-/resolve-uri-3.1.2.tgz",
-      "integrity": "sha512-bRISgCIjP20/tbWSPWMEi54QVPRZExkuD9lJL+UIxUKtwVJA8wW1Trb1jMs1RFXo1CBTNZ/5hpC9QvmKWdopKw==",
-      "dev": true,
-      "license": "MIT",
-      "engines": {
-        "node": ">=6.0.0"
-      }
-    },
-    "node_modules/@jridgewell/sourcemap-codec": {
-      "version": "1.6.0",
-      "resolved": "https://registry.npmjs.org/@jridgewell/sourcemap-codec/-/sourcemap-codec-1.6.0.tgz",
-      "integrity": "sha512-T7jf+5zgsZHwNJ4lvQ7/aezbyk0nNX+zJVWpmHA7VYsEx7a7qr5Rg5IbtJFqkgze5Y2sruq1RUY8Q837Od7iFw==",
-      "dev": true,
-      "license": "MIT"
-    },
-    "node_modules/@jridgewell/trace-mapping": {
-      "version": "0.3.31",
-      "resolved": "https://registry.npmjs.org/@jridgewell/trace-mapping/-/trace-mapping-0.3.31.tgz",
-      "integrity": "sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@jridgewell/resolve-uri": "^3.1.0",
-        "@jridgewell/sourcemap-codec": "^1.4.14"
-      }
-    },
-    "node_modules/@tailwindcss/node": {
-      "version": "4.3.3",
-      "resolved": "https://registry.npmjs.org/@tailwindcss/node/-/node-4.3.3.tgz",
-      "integrity": "sha512-/T8IKEsf9VTU6tLjgC7+sv2mOPtQxzE2jMw7u4Tt40Tx+QSZxpzh95/H6cMKoja9XuW7iMdLJYBB0o9G1CaAgg==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@jridgewell/remapping": "^2.3.5",
-        "enhanced-resolve": "^5.24.1",
-        "jiti": "^2.7.0",
-        "lightningcss": "1.32.0",
-        "magic-string": "^0.30.21",
-        "source-map-js": "^1.2.1",
-        "tailwindcss": "4.3.3"
-      }
-    },
-    "node_modules/@tailwindcss/oxide": {
-      "version": "4.3.3",
-      "resolved": "https://registry.npmjs.org/@tailwindcss/oxide/-/oxide-4.3.3.tgz",
-      "integrity": "sha512-krXjAikiaFSPaK/FkAQT5UTx3VormQaiZ5hBFlJZ9UFQGB/rwg1MZIhHAG9smMQRTdyJxP6Qt5MwMtdyU5FWrA==",
-      "dev": true,
-      "license": "MIT",
-      "engines": {
-        "node": ">= 20"
-      },
-      "optionalDependencies": {
-        "@tailwindcss/oxide-android-arm64": "4.3.3",
-        "@tailwindcss/oxide-darwin-arm64": "4.3.3",
-        "@tailwindcss/oxide-darwin-x64": "4.3.3",
-        "@tailwindcss/oxide-freebsd-x64": "4.3.3",
-        "@tailwindcss/oxide-linux-arm-gnueabihf": "4.3.3",
-        "@tailwindcss/oxide-linux-arm64-gnu": "4.3.3",
-        "@tailwindcss/oxide-linux-arm64-musl": "4.3.3",
-        "@tailwindcss/oxide-linux-x64-gnu": "4.3.3",
-        "@tailwindcss/oxide-linux-x64-musl": "4.3.3",
-        "@tailwindcss/oxide-wasm32-wasi": "4.3.3",
-        "@tailwindcss/oxide-win32-arm64-msvc": "4.3.3",
-        "@tailwindcss/oxide-win32-x64-msvc": "4.3.3"
-      }
-    },
-    "node_modules/@tailwindcss/oxide-android-arm64": {
-      "version": "4.3.3",
-      "resolved": "https://registry.npmjs.org/@tailwindcss/oxide-android-arm64/-/oxide-android-arm64-4.3.3.tgz",
-      "integrity": "sha512-Y85A2gmPSkl5Ve5qR86GL4HT509cFqQh1aes9p3sSkyTPwt0Pppf3GkwGe4JPACcRYjgJIEhQgM6dBClnr0NYw==",
-      "cpu": [
-        "arm64"
-      ],
-      "dev": true,
-      "license": "MIT",
-      "optional": true,
-      "os": [
-        "android"
-      ],
-      "engines": {
-        "node": ">= 20"
-      }
-    },
-    "node_modules/@tailwindcss/oxide-darwin-arm64": {
-      "version": "4.3.3",
-      "resolved": "https://registry.npmjs.org/@tailwindcss/oxide-darwin-arm64/-/oxide-darwin-arm64-4.3.3.tgz",
-      "integrity": "sha512-BiaWatpBcERQFDlOjRDpIVXuFK5PJez5SA4JMg6VYZdBYU+qKfV/vqjcIs+IYmtitf1xYQZTwXvU/8y4lfZUGw==",
-      "cpu": [
-        "arm64"
-      ],
-      "dev": true,
-      "license": "MIT",
-      "optional": true,
-      "os": [
-        "darwin"
-      ],
-      "engines": {
-        "node": ">= 20"
-      }
-    },
-    "node_modules/@tailwindcss/oxide-darwin-x64": {
-      "version": "4.3.3",
-      "resolved": "https://registry.npmjs.org/@tailwindcss/oxide-darwin-x64/-/oxide-darwin-x64-4.3.3.tgz",
-      "integrity": "sha512-fAeUqfV5ndhxRwai8cXGzdLvul9utWOmeTkv69unv4ZXixjn61Z+p9lCWdwOwA3TYboG3BwdVuN/RDjhBRl0mw==",
-      "cpu": [
-        "x64"
-      ],
-      "dev": true,
-      "license": "MIT",
-      "optional": true,
-      "os": [
-        "darwin"
-      ],
-      "engines": {
-        "node": ">= 20"
-      }
-    },
-    "node_modules/@tailwindcss/oxide-freebsd-x64": {
-      "version": "4.3.3",
-      "resolved": "https://registry.npmjs.org/@tailwindcss/oxide-freebsd-x64/-/oxide-freebsd-x64-4.3.3.tgz",
-      "integrity": "sha512-iyf5bV6+wnAlflVeEy7R25dupxTNECZN5QMI0qNT6eT+EgaGdZcKhGkr5SdoaWiLJ3spLqIY9VCeSGrwmtg4kw==",
-      "cpu": [
-        "x64"
-      ],
-      "dev": true,
-      "license": "MIT",
-      "optional": true,
-      "os": [
-        "freebsd"
-      ],
-      "engines": {
-        "node": ">= 20"
-      }
-    },
-    "node_modules/@tailwindcss/oxide-linux-arm-gnueabihf": {
-      "version": "4.3.3",
-      "resolved": "https://registry.npmjs.org/@tailwindcss/oxide-linux-arm-gnueabihf/-/oxide-linux-arm-gnueabihf-4.3.3.tgz",
-      "integrity": "sha512-aAYUprJAJQWWbRrPvtjdroZ56Md+JM8pMiopS6xGEwDfLhqj+2ver2p4nU4Mb3CRqcMmNBjo8KkUgcxhkzVQGQ==",
-      "cpu": [
-        "arm"
-      ],
-      "dev": true,
-      "license": "MIT",
-      "optional": true,
-      "os": [
-        "linux"
-      ],
-      "engines": {
-        "node": ">= 20"
-      }
-    },
-    "node_modules/@tailwindcss/oxide-linux-arm64-gnu": {
-      "version": "4.3.3",
-      "resolved": "https://registry.npmjs.org/@tailwindcss/oxide-linux-arm64-gnu/-/oxide-linux-arm64-gnu-4.3.3.tgz",
-      "integrity": "sha512-nDxldcEENOxZRzC2uu9jrutZdAAQtb+8WWDCSnWL1zvBk1+FN+x6MtDViPB5AJMfttVCUhehGWus3XBPgatM/w==",
-      "cpu": [
-        "arm64"
-      ],
-      "dev": true,
-      "libc": [
-        "glibc"
-      ],
-      "license": "MIT",
-      "optional": true,
-      "os": [
-        "linux"
-      ],
-      "engines": {
-        "node": ">= 20"
-      }
-    },
-    "node_modules/@tailwindcss/oxide-linux-arm64-musl": {
-      "version": "4.3.3",
-      "resolved": "https://registry.npmjs.org/@tailwindcss/oxide-linux-arm64-musl/-/oxide-linux-arm64-musl-4.3.3.tgz",
-      "integrity": "sha512-Md44bD6veX/PC5iyF8cDVnw4HBIANZepRZZ7a8DQOvkfo5WUBwcp6iAuCUz23u+4SUkhJlD3eL7hNdW8ezd/kA==",
-      "cpu": [
-        "arm64"
-      ],
-      "dev": true,
-      "libc": [
-        "musl"
-      ],
-      "license": "MIT",
-      "optional": true,
-      "os": [
-        "linux"
-      ],
-      "engines": {
-        "node": ">= 20"
-      }
-    },
-    "node_modules/@tailwindcss/oxide-linux-x64-gnu": {
-      "version": "4.3.3",
-      "resolved": "https://registry.npmjs.org/@tailwindcss/oxide-linux-x64-gnu/-/oxide-linux-x64-gnu-4.3.3.tgz",
-      "integrity": "sha512-tx7us1muwOKAKWao2v/GaafFeQboE6aj88vC6ziN2NCGcRm8gWUhwjzg+YdVB1e4boAtdtma4L43onunI6NS4w==",
-      "cpu": [
-        "x64"
-      ],
-      "dev": true,
-      "libc": [
-        "glibc"
-      ],
-      "license": "MIT",
-      "optional": true,
-      "os": [
-        "linux"
-      ],
-      "engines": {
-        "node": ">= 20"
-      }
-    },
-    "node_modules/@tailwindcss/oxide-linux-x64-musl": {
-      "version": "4.3.3",
-      "resolved": "https://registry.npmjs.org/@tailwindcss/oxide-linux-x64-musl/-/oxide-linux-x64-musl-4.3.3.tgz",
-      "integrity": "sha512-SJxX60smvHgasZoBy11dX6YRjXJFovwWBoedhbQPOBzgFWBHGB+TVPWB9BxzR7TTxU8FQZAI2AyiNCMzFm8Img==",
-      "cpu": [
-        "x64"
-      ],
-      "dev": true,
-      "libc": [
-        "musl"
-      ],
-      "license": "MIT",
-      "optional": true,
-      "os": [
-        "linux"
-      ],
-      "engines": {
-        "node": ">= 20"
-      }
-    },
-    "node_modules/@tailwindcss/oxide-wasm32-wasi": {
-      "version": "4.3.3",
-      "resolved": "https://registry.npmjs.org/@tailwindcss/oxide-wasm32-wasi/-/oxide-wasm32-wasi-4.3.3.tgz",
-      "integrity": "sha512-jx1+rPhY/5Ympkktd656HBWEBLxP7dH06losBLjjf5vgCODXvi9KhtftWcMIwTFIDqBr7cRnQkdLnAG+IOlGvQ==",
-      "bundleDependencies": [
-        "@napi-rs/wasm-runtime",
-        "@emnapi/core",
-        "@emnapi/runtime",
-        "@tybys/wasm-util",
-        "@emnapi/wasi-threads",
-        "tslib"
-      ],
-      "cpu": [
-        "wasm32"
-      ],
-      "dev": true,
-      "license": "MIT",
-      "optional": true,
-      "dependencies": {
-        "@emnapi/core": "^1.11.1",
-        "@emnapi/runtime": "^1.11.1",
-        "@emnapi/wasi-threads": "^1.2.2",
-        "@napi-rs/wasm-runtime": "^1.1.4",
-        "@tybys/wasm-util": "^0.10.2",
-        "tslib": "^2.8.1"
-      },
-      "engines": {
-        "node": ">=14.0.0"
-      }
-    },
-    "node_modules/@tailwindcss/oxide-win32-arm64-msvc": {
-      "version": "4.3.3",
-      "resolved": "https://registry.npmjs.org/@tailwindcss/oxide-win32-arm64-msvc/-/oxide-win32-arm64-msvc-4.3.3.tgz",
-      "integrity": "sha512-3rc292Ca2ceK6Ulcc/bAVnTs/3nDtoPhyEKlgPv+yQJQi/JS/AMJlqzxvlDacL1nekbrcf6bTqp/jV4qgnPxNQ==",
-      "cpu": [
-        "arm64"
-      ],
-      "dev": true,
-      "license": "MIT",
-      "optional": true,
-      "os": [
-        "win32"
-      ],
-      "engines": {
-        "node": ">= 20"
-      }
-    },
-    "node_modules/@tailwindcss/oxide-win32-x64-msvc": {
-      "version": "4.3.3",
-      "resolved": "https://registry.npmjs.org/@tailwindcss/oxide-win32-x64-msvc/-/oxide-win32-x64-msvc-4.3.3.tgz",
-      "integrity": "sha512-yJ0pwIVc/nYeGoV02WtsN8KYyLQv7kyI2wDnkezyJlGGjkd4QLwDGAwl47YpPJeuI0M0ObaXGSPjvWDPeTPggw==",
-      "cpu": [
-        "x64"
-      ],
-      "dev": true,
-      "license": "MIT",
-      "optional": true,
-      "os": [
-        "win32"
-      ],
-      "engines": {
-        "node": ">= 20"
-      }
-    },
-    "node_modules/@tailwindcss/postcss": {
-      "version": "4.3.3",
-      "resolved": "https://registry.npmjs.org/@tailwindcss/postcss/-/postcss-4.3.3.tgz",
-      "integrity": "sha512-JTSZZGQi1AyKirbLN3azmjVzef92tcX7h+iSqPdaeStyFpGpDlKvvpxeOE8njhbUanbRwr3z8DyzhICWnMtQeg==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@alloc/quick-lru": "^5.2.0",
-        "@tailwindcss/node": "4.3.3",
-        "@tailwindcss/oxide": "4.3.3",
-        "postcss": "^8.5.16",
-        "tailwindcss": "4.3.3"
-      }
-    },
-    "node_modules/@types/geojson": {
-      "version": "7946.0.16",
-      "resolved": "https://registry.npmjs.org/@types/geojson/-/geojson-7946.0.16.tgz",
-      "integrity": "sha512-6C8nqWur3j98U6+lXDfTUWIfgvZU+EumvpHKcYjujKH7woYyLj2sUmff0tRhrqM7BohUw7Pz3ZB1jj2gW9Fvmg==",
-      "dev": true,
-      "license": "MIT"
-    },
-    "node_modules/@types/topojson-client": {
-      "version": "3.1.5",
-      "resolved": "https://registry.npmjs.org/@types/topojson-client/-/topojson-client-3.1.5.tgz",
-      "integrity": "sha512-C79rySTyPxnQNNguTZNI1Ct4D7IXgvyAs3p9HPecnl6mNrJ5+UhvGNYcZfpROYV2lMHI48kJPxwR+F9C6c7nmw==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@types/geojson": "*",
-        "@types/topojson-specification": "*"
-      }
-    },
-    "node_modules/@types/topojson-specification": {
-      "version": "1.0.5",
-      "resolved": "https://registry.npmjs.org/@types/topojson-specification/-/topojson-specification-1.0.5.tgz",
-      "integrity": "sha512-C7KvcQh+C2nr6Y2Ub4YfgvWvWCgP2nOQMtfhlnwsRL4pYmmwzBS7HclGiS87eQfDOU/DLQpX6GEscviaz4yLIQ==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@types/geojson": "*"
-      }
-    },
-    "node_modules/autoprefixer": {
-      "version": "10.6.1",
-      "resolved": "https://registry.npmjs.org/autoprefixer/-/autoprefixer-10.6.1.tgz",
-      "integrity": "sha512-cL1Qz6ADZhcEbny/8HPfe99J6HhNoYtpX2LFLIbhgGE7Q1hlQVkYFdetDN7Id3KiQxhDrHwzlHr/YQCnZ8+xSA==",
-      "dev": true,
-      "funding": [
-        {
-          "type": "opencollective",
-          "url": "https://opencollective.com/postcss/"
-        },
-        {
-          "type": "tidelift",
-          "url": "https://tidelift.com/funding/github/npm/autoprefixer"
-        },
-        {
-          "type": "github",
-          "url": "https://github.com/sponsors/ai"
-        }
-      ],
-      "license": "MIT",
-      "dependencies": {
-        "browserslist": "^4.28.9",
-        "caniuse-lite": "^1.0.30001810",
-        "fraction.js": "^5.3.4",
-        "picocolors": "^1.1.1",
-        "postcss-value-parser": "^4.2.0"
-      },
-      "bin": {
-        "autoprefixer": "bin/autoprefixer"
-      },
-      "engines": {
-        "node": "^10 || ^12 || >=14"
-      },
-      "peerDependencies": {
-        "postcss": "^8.1.0"
-      }
-    },
-    "node_modules/baseline-browser-mapping": {
-      "version": "2.11.24",
-      "resolved": "https://registry.npmjs.org/baseline-browser-mapping/-/baseline-browser-mapping-2.11.24.tgz",
-      "integrity": "sha512-hYrgxie335U08WqICoGqKRzV1HFXv6zdxwJE4ekCb80CM9a0SVVsN4QPwT67RraRo+9h8IATk6uxHJw7QSkdOg==",
-      "dev": true,
-      "license": "Apache-2.0",
-      "bin": {
-        "baseline-browser-mapping": "dist/cli.cjs"
-      },
-      "engines": {
-        "node": ">=6.0.0"
-      }
-    },
-    "node_modules/browserslist": {
-      "version": "4.29.0",
-      "resolved": "https://registry.npmjs.org/browserslist/-/browserslist-4.29.0.tgz",
-      "integrity": "sha512-3GSvyjvDI4Dur1Meg2BekJquu5uF+9R9a1+5M1Mde192eZoXbeXjzgOsgqPS2V8D5wrrip0gR5Hf/GhWQ9ZzaA==",
-      "dev": true,
-      "funding": [
-        {
-          "type": "opencollective",
-          "url": "https://opencollective.com/browserslist"
-        },
-        {
-          "type": "tidelift",
-          "url": "https://tidelift.com/funding/github/npm/browserslist"
-        },
-        {
-          "type": "github",
-          "url": "https://github.com/sponsors/ai"
-        }
-      ],
-      "license": "MIT",
-      "dependencies": {
-        "baseline-browser-mapping": "^2.11.23",
-        "caniuse-lite": "^1.0.30001810",
-        "electron-to-chromium": "^1.5.427",
-        "node-releases": "^2.0.55",
-        "update-browserslist-db": "^1.3.3"
-      },
-      "bin": {
-        "browserslist": "cli.js"
-      },
-      "engines": {
-        "node": "^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7"
-      }
-    },
-    "node_modules/caniuse-lite": {
-      "version": "1.0.30001810",
-      "resolved": "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001810.tgz",
-      "integrity": "sha512-TITQPUkaz+aVk5GL6NhOdwk1aEaNTSDPsGFWrTuhKGtjTF70jL/Oht2W4c6rXUe5fu7Ie19VIahAXHIIiWWNeg==",
-      "dev": true,
-      "funding": [
-        {
-          "type": "opencollective",
-          "url": "https://opencollective.com/browserslist"
-        },
-        {
-          "type": "tidelift",
-          "url": "https://tidelift.com/funding/github/npm/caniuse-lite"
-        },
-        {
-          "type": "github",
-          "url": "https://github.com/sponsors/ai"
-        }
-      ],
-      "license": "CC-BY-4.0"
-    },
-    "node_modules/detect-libc": {
-      "version": "2.1.2",
-      "resolved": "https://registry.npmjs.org/detect-libc/-/detect-libc-2.1.2.tgz",
-      "integrity": "sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==",
-      "dev": true,
-      "license": "Apache-2.0",
-      "engines": {
-        "node": ">=8"
-      }
-    },
-    "node_modules/electron-to-chromium": {
-      "version": "1.5.430",
-      "resolved": "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.5.430.tgz",
-      "integrity": "sha512-e1QEj72Y4zd8RlNZVmoTg+iCOSVwpk05IOiiQwdrkwCSVlZfPthevErhE+nckGd2YbsXfp1SkisznhGVIXP2NQ==",
-      "dev": true,
-      "license": "ISC"
-    },
-    "node_modules/enhanced-resolve": {
-      "version": "5.25.1",
-      "resolved": "https://registry.npmjs.org/enhanced-resolve/-/enhanced-resolve-5.25.1.tgz",
-      "integrity": "sha512-nGXts5znJzmWPu+mIE9izCOzdg63oJca2mDzGWWTth7sr4aCToKcoyFVBQwN75Ij5Pf6p510EwkTqViTRzDV+w==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "graceful-fs": "^4.2.4",
-        "tapable": "^2.3.3"
-      },
-      "engines": {
-        "node": ">=10.13.0"
-      }
-    },
-    "node_modules/escalade": {
-      "version": "3.2.0",
-      "resolved": "https://registry.npmjs.org/escalade/-/escalade-3.2.0.tgz",
-      "integrity": "sha512-WUj2qlxaQtO4g6Pq5c29GTcWGDyd8itL8zTlipgECz3JesAiiOKotd8JU6otB3PACgG6xkJUyVhboMS+bje/jA==",
-      "dev": true,
-      "license": "MIT",
-      "engines": {
-        "node": ">=6"
-      }
-    },
-    "node_modules/fraction.js": {
-      "version": "5.3.4",
-      "resolved": "https://registry.npmjs.org/fraction.js/-/fraction.js-5.3.4.tgz",
-      "integrity": "sha512-1X1NTtiJphryn/uLQz3whtY6jK3fTqoE3ohKs0tT+Ujr1W59oopxmoEh7Lu5p6vBaPbgoM0bzveAW4Qi5RyWDQ==",
-      "dev": true,
-      "license": "MIT",
-      "engines": {
-        "node": "*"
-      },
-      "funding": {
-        "type": "github",
-        "url": "https://github.com/sponsors/rawify"
-      }
-    },
-    "node_modules/graceful-fs": {
-      "version": "4.2.11",
-      "resolved": "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.2.11.tgz",
-      "integrity": "sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==",
-      "dev": true,
-      "license": "ISC"
-    },
-    "node_modules/jiti": {
-      "version": "2.7.0",
-      "resolved": "https://registry.npmjs.org/jiti/-/jiti-2.7.0.tgz",
-      "integrity": "sha512-AC/7JofJvZGrrneWNaEnJeOLUx+JlGt7tNa0wZiRPT4MY1wmfKjt2+6O2p2uz2+skll8OZZmJMNqeke7kKbNgQ==",
-      "dev": true,
-      "license": "MIT",
-      "bin": {
-        "jiti": "lib/jiti-cli.mjs"
-      }
-    },
-    "node_modules/lightningcss": {
-      "version": "1.32.0",
-      "resolved": "https://registry.npmjs.org/lightningcss/-/lightningcss-1.32.0.tgz",
-      "integrity": "sha512-NXYBzinNrblfraPGyrbPoD19C1h9lfI/1mzgWYvXUTe414Gz/X1FD2XBZSZM7rRTrMA8JL3OtAaGifrIKhQ5yQ==",
-      "dev": true,
-      "license": "MPL-2.0",
-      "dependencies": {
-        "detect-libc": "^2.0.3"
-      },
-      "engines": {
-        "node": ">= 12.0.0"
-      },
-      "funding": {
-        "type": "opencollective",
-        "url": "https://opencollective.com/parcel"
-      },
-      "optionalDependencies": {
-        "lightningcss-android-arm64": "1.32.0",
-        "lightningcss-darwin-arm64": "1.32.0",
-        "lightningcss-darwin-x64": "1.32.0",
-        "lightningcss-freebsd-x64": "1.32.0",
-        "lightningcss-linux-arm-gnueabihf": "1.32.0",
-        "lightningcss-linux-arm64-gnu": "1.32.0",
-        "lightningcss-linux-arm64-musl": "1.32.0",
-        "lightningcss-linux-x64-gnu": "1.32.0",
-        "lightningcss-linux-x64-musl": "1.32.0",
-        "lightningcss-win32-arm64-msvc": "1.32.0",
-        "lightningcss-win32-x64-msvc": "1.32.0"
-      }
-    },
-    "node_modules/lightningcss-android-arm64": {
-      "version": "1.32.0",
-      "resolved": "https://registry.npmjs.org/lightningcss-android-arm64/-/lightningcss-android-arm64-1.32.0.tgz",
-      "integrity": "sha512-YK7/ClTt4kAK0vo6w3X+Pnm0D2cf2vPHbhOXdoNti1Ga0al1P4TBZhwjATvjNwLEBCnKvjJc2jQgHXH0NEwlAg==",
-      "cpu": [
-        "arm64"
-      ],
-      "dev": true,
-      "license": "MPL-2.0",
-      "optional": true,
-      "os": [
-        "android"
-      ],
-      "engines": {
-        "node": ">= 12.0.0"
-      },
-      "funding": {
-        "type": "opencollective",
-        "url": "https://opencollective.com/parcel"
-      }
-    },
-    "node_modules/lightningcss-darwin-arm64": {
-      "version": "1.32.0",
-      "resolved": "https://registry.npmjs.org/lightningcss-darwin-arm64/-/lightningcss-darwin-arm64-1.32.0.tgz",
-      "integrity": "sha512-RzeG9Ju5bag2Bv1/lwlVJvBE3q6TtXskdZLLCyfg5pt+HLz9BqlICO7LZM7VHNTTn/5PRhHFBSjk5lc4cmscPQ==",
-      "cpu": [
-        "arm64"
-      ],
-      "dev": true,
-      "license": "MPL-2.0",
-      "optional": true,
-      "os": [
-        "darwin"
-      ],
-      "engines": {
-        "node": ">= 12.0.0"
-      },
-      "funding": {
-        "type": "opencollective",
-        "url": "https://opencollective.com/parcel"
-      }
-    },
-    "node_modules/lightningcss-darwin-x64": {
-      "version": "1.32.0",
-      "resolved": "https://registry.npmjs.org/lightningcss-darwin-x64/-/lightningcss-darwin-x64-1.32.0.tgz",
-      "integrity": "sha512-U+QsBp2m/s2wqpUYT/6wnlagdZbtZdndSmut/NJqlCcMLTWp5muCrID+K5UJ6jqD2BFshejCYXniPDbNh73V8w==",
-      "cpu": [
-        "x64"
-      ],
-      "dev": true,
-      "license": "MPL-2.0",
-      "optional": true,
-      "os": [
-        "darwin"
-      ],
-      "engines": {
-        "node": ">= 12.0.0"
-      },
-      "funding": {
-        "type": "opencollective",
-        "url": "https://opencollective.com/parcel"
-      }
-    },
-    "node_modules/lightningcss-freebsd-x64": {
-      "version": "1.32.0",
-      "resolved": "https://registry.npmjs.org/lightningcss-freebsd-x64/-/lightningcss-freebsd-x64-1.32.0.tgz",
-      "integrity": "sha512-JCTigedEksZk3tHTTthnMdVfGf61Fky8Ji2E4YjUTEQX14xiy/lTzXnu1vwiZe3bYe0q+SpsSH/CTeDXK6WHig==",
-      "cpu": [
-        "x64"
-      ],
-      "dev": true,
-      "license": "MPL-2.0",
-      "optional": true,
-      "os": [
-        "freebsd"
-      ],
-      "engines": {
-        "node": ">= 12.0.0"
-      },
-      "funding": {
-        "type": "opencollective",
-        "url": "https://opencollective.com/parcel"
-      }
-    },
-    "node_modules/lightningcss-linux-arm-gnueabihf": {
-      "version": "1.32.0",
-      "resolved": "https://registry.npmjs.org/lightningcss-linux-arm-gnueabihf/-/lightningcss-linux-arm-gnueabihf-1.32.0.tgz",
-      "integrity": "sha512-x6rnnpRa2GL0zQOkt6rts3YDPzduLpWvwAF6EMhXFVZXD4tPrBkEFqzGowzCsIWsPjqSK+tyNEODUBXeeVHSkw==",
-      "cpu": [
-        "arm"
-      ],
-      "dev": true,
-      "license": "MPL-2.0",
-      "optional": true,
-      "os": [
-        "linux"
-      ],
-      "engines": {
-        "node": ">= 12.0.0"
-      },
-      "funding": {
-        "type": "opencollective",
-        "url": "https://opencollective.com/parcel"
-      }
-    },
-    "node_modules/lightningcss-linux-arm64-gnu": {
-      "version": "1.32.0",
-      "resolved": "https://registry.npmjs.org/lightningcss-linux-arm64-gnu/-/lightningcss-linux-arm64-gnu-1.32.0.tgz",
-      "integrity": "sha512-0nnMyoyOLRJXfbMOilaSRcLH3Jw5z9HDNGfT/gwCPgaDjnx0i8w7vBzFLFR1f6CMLKF8gVbebmkUN3fa/kQJpQ==",
-      "cpu": [
-        "arm64"
-      ],
-      "dev": true,
-      "libc": [
-        "glibc"
-      ],
-      "license": "MPL-2.0",
-      "optional": true,
-      "os": [
-        "linux"
-      ],
-      "engines": {
-        "node": ">= 12.0.0"
-      },
-      "funding": {
-        "type": "opencollective",
-        "url": "https://opencollective.com/parcel"
-      }
-    },
-    "node_modules/lightningcss-linux-arm64-musl": {
-      "version": "1.32.0",
-      "resolved": "https://registry.npmjs.org/lightningcss-linux-arm64-musl/-/lightningcss-linux-arm64-musl-1.32.0.tgz",
-      "integrity": "sha512-UpQkoenr4UJEzgVIYpI80lDFvRmPVg6oqboNHfoH4CQIfNA+HOrZ7Mo7KZP02dC6LjghPQJeBsvXhJod/wnIBg==",
-      "cpu": [
-        "arm64"
-      ],
-      "dev": true,
-      "libc": [
-        "musl"
-      ],
-      "license": "MPL-2.0",
-      "optional": true,
-      "os": [
-        "linux"
-      ],
-      "engines": {
-        "node": ">= 12.0.0"
-      },
-      "funding": {
-        "type": "opencollective",
-        "url": "https://opencollective.com/parcel"
-      }
-    },
-    "node_modules/lightningcss-linux-x64-gnu": {
-      "version": "1.32.0",
-      "resolved": "https://registry.npmjs.org/lightningcss-linux-x64-gnu/-/lightningcss-linux-x64-gnu-1.32.0.tgz",
-      "integrity": "sha512-V7Qr52IhZmdKPVr+Vtw8o+WLsQJYCTd8loIfpDaMRWGUZfBOYEJeyJIkqGIDMZPwPx24pUMfwSxxI8phr/MbOA==",
-      "cpu": [
-        "x64"
-      ],
-      "dev": true,
-      "libc": [
-        "glibc"
-      ],
-      "license": "MPL-2.0",
-      "optional": true,
-      "os": [
-        "linux"
-      ],
-      "engines": {
-        "node": ">= 12.0.0"
-      },
-      "funding": {
-        "type": "opencollective",
-        "url": "https://opencollective.com/parcel"
-      }
-    },
-    "node_modules/lightningcss-linux-x64-musl": {
-      "version": "1.32.0",
-      "resolved": "https://registry.npmjs.org/lightningcss-linux-x64-musl/-/lightningcss-linux-x64-musl-1.32.0.tgz",
-      "integrity": "sha512-bYcLp+Vb0awsiXg/80uCRezCYHNg1/l3mt0gzHnWV9XP1W5sKa5/TCdGWaR/zBM2PeF/HbsQv/j2URNOiVuxWg==",
-      "cpu": [
-        "x64"
-      ],
-      "dev": true,
-      "libc": [
-        "musl"
-      ],
-      "license": "MPL-2.0",
-      "optional": true,
-      "os": [
-        "linux"
-      ],
-      "engines": {
-        "node": ">= 12.0.0"
-      },
-      "funding": {
-        "type": "opencollective",
-        "url": "https://opencollective.com/parcel"
-      }
-    },
-    "node_modules/lightningcss-win32-arm64-msvc": {
-      "version": "1.32.0",
-      "resolved": "https://registry.npmjs.org/lightningcss-win32-arm64-msvc/-/lightningcss-win32-arm64-msvc-1.32.0.tgz",
-      "integrity": "sha512-8SbC8BR40pS6baCM8sbtYDSwEVQd4JlFTOlaD3gWGHfThTcABnNDBda6eTZeqbofalIJhFx0qKzgHJmcPTnGdw==",
-      "cpu": [
-        "arm64"
-      ],
-      "dev": true,
-      "license": "MPL-2.0",
-      "optional": true,
-      "os": [
-        "win32"
-      ],
-      "engines": {
-        "node": ">= 12.0.0"
-      },
-      "funding": {
-        "type": "opencollective",
-        "url": "https://opencollective.com/parcel"
-      }
-    },
-    "node_modules/lightningcss-win32-x64-msvc": {
-      "version": "1.32.0",
-      "resolved": "https://registry.npmjs.org/lightningcss-win32-x64-msvc/-/lightningcss-win32-x64-msvc-1.32.0.tgz",
-      "integrity": "sha512-Amq9B/SoZYdDi1kFrojnoqPLxYhQ4Wo5XiL8EVJrVsB8ARoC1PWW6VGtT0WKCemjy8aC+louJnjS7U18x3b06Q==",
-      "cpu": [
-        "x64"
-      ],
-      "dev": true,
-      "license": "MPL-2.0",
-      "optional": true,
-      "os": [
-        "win32"
-      ],
-      "engines": {
-        "node": ">= 12.0.0"
-      },
-      "funding": {
-        "type": "opencollective",
-        "url": "https://opencollective.com/parcel"
-      }
-    },
-    "node_modules/magic-string": {
-      "version": "0.30.21",
-      "resolved": "https://registry.npmjs.org/magic-string/-/magic-string-0.30.21.tgz",
-      "integrity": "sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@jridgewell/sourcemap-codec": "^1.5.5"
-      }
-    },
-    "node_modules/nanoid": {
-      "version": "3.3.19",
-      "resolved": "https://registry.npmjs.org/nanoid/-/nanoid-3.3.19.tgz",
-      "integrity": "sha512-Y2tUNy4ouw6tq5oDSKeQYGOyhkUBhNOcGV/02KC+6kd9eDGqdZd++mjMiIDilrBYvjEnCYvVtsuHCuP+okSfug==",
-      "dev": true,
-      "funding": [
-        {
-          "type": "github",
-          "url": "https://github.com/sponsors/ai"
-        }
-      ],
-      "license": "MIT",
-      "bin": {
-        "nanoid": "bin/nanoid.cjs"
-      },
-      "engines": {
-        "node": "^10 || ^12 || ^13.7 || ^14 || >=15.0.1"
-      }
-    },
-    "node_modules/node-releases": {
-      "version": "2.0.55",
-      "resolved": "https://registry.npmjs.org/node-releases/-/node-releases-2.0.55.tgz",
-      "integrity": "sha512-mIrE/Cw9y+9Au6dS5vDKDhQza9YvG6w+ZrS6X+ZzA7yFW/soAeaups4Qzn1bL6g5FVy8WtP79+0j82oPIbqRjQ==",
-      "dev": true,
-      "license": "MIT",
-      "engines": {
-        "node": ">=18"
-      }
-    },
-    "node_modules/picocolors": {
-      "version": "1.1.1",
-      "resolved": "https://registry.npmjs.org/picocolors/-/picocolors-1.1.1.tgz",
-      "integrity": "sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==",
-      "dev": true,
-      "license": "ISC"
-    },
-    "node_modules/postcss": {
-      "version": "8.5.28",
-      "resolved": "https://registry.npmjs.org/postcss/-/postcss-8.5.28.tgz",
-      "integrity": "sha512-RRuzqDtt5Y9h3quz5hWhK+TPnsmVs6WwSU6LkJMeY4HstUEDuYTG8UJSdawMRzmzAtV+KEoG8N3Qg2qLy5vM/A==",
-      "dev": true,
-      "funding": [
-        {
-          "type": "opencollective",
-          "url": "https://opencollective.com/postcss/"
-        },
-        {
-          "type": "tidelift",
-          "url": "https://tidelift.com/funding/github/npm/postcss"
-        },
-        {
-          "type": "github",
-          "url": "https://github.com/sponsors/ai"
-        }
-      ],
-      "license": "MIT",
-      "dependencies": {
-        "nanoid": "^3.3.18",
-        "picocolors": "^1.1.1",
-        "source-map-js": "^1.2.1"
-      },
-      "engines": {
-        "node": "^10 || ^12 || >=14"
-      }
-    },
-    "node_modules/postcss-value-parser": {
-      "version": "4.2.0",
-      "resolved": "https://registry.npmjs.org/postcss-value-parser/-/postcss-value-parser-4.2.0.tgz",
-      "integrity": "sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==",
-      "dev": true,
-      "license": "MIT"
-    },
-    "node_modules/source-map-js": {
-      "version": "1.2.1",
-      "resolved": "https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.1.tgz",
-      "integrity": "sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==",
-      "dev": true,
-      "license": "BSD-3-Clause",
-      "engines": {
-        "node": ">=0.10.0"
-      }
-    },
-    "node_modules/tailwindcss": {
-      "version": "4.3.3",
-      "resolved": "https://registry.npmjs.org/tailwindcss/-/tailwindcss-4.3.3.tgz",
-      "integrity": "sha512-gOhV3P7ufE62QDGg1zVaTgCR+EtPv92k2nIhVcVKcLmxT1sUBsQGhnZj175j+MqRt4zLF7ic+sCYjfhxMxj7YQ==",
-      "dev": true,
-      "license": "MIT"
-    },
-    "node_modules/tapable": {
-      "version": "2.3.3",
-      "resolved": "https://registry.npmjs.org/tapable/-/tapable-2.3.3.tgz",
-      "integrity": "sha512-uxc/zpqFg6x7C8vOE7lh6Lbda8eEL9zmVm/PLeTPBRhh1xCgdWaQ+J1CUieGpIfm2HdtsUpRv+HshiasBMcc6A==",
-      "dev": true,
-      "license": "MIT",
-      "engines": {
-        "node": ">=6"
-      },
-      "funding": {
-        "type": "opencollective",
-        "url": "https://opencollective.com/webpack"
-      }
-    },
-    "node_modules/update-browserslist-db": {
-      "version": "1.3.3",
-      "resolved": "https://registry.npmjs.org/update-browserslist-db/-/update-browserslist-db-1.3.3.tgz",
-      "integrity": "sha512-pJ2sYawQS0R/WI928Gj5GlPhTGzbMelq0+4INtSYNDV9ErKJcX6xjGWkoG/VnB3dpUm00zALaqkrUD77pO5TDQ==",
-      "dev": true,
-      "funding": [
-        {
-          "type": "opencollective",
-          "url": "https://opencollective.com/browserslist"
-        },
-        {
-          "type": "tidelift",
-          "url": "https://tidelift.com/funding/github/npm/browserslist"
-        },
-        {
-          "type": "github",
-          "url": "https://github.com/sponsors/ai"
-        }
-      ],
-      "license": "MIT",
-      "dependencies": {
-        "escalade": "^3.2.0",
-        "picocolors": "^1.1.1"
-      },
-      "bin": {
-        "update-browserslist-db": "cli.js"
-      },
-      "peerDependencies": {
-        "browserslist": ">= 4.21.0"
-      }
-    },
-    "node_modules/world-atlas": {
-      "version": "2.0.2",
-      "resolved": "https://registry.npmjs.org/world-atlas/-/world-atlas-2.0.2.tgz",
-      "integrity": "sha512-IXfV0qwlKXpckz1FhwXVwKRjiIhOnWttOskm5CtxMsjgE/MXAYRHWJqgXOpM8IkcPBoXnyTU5lFHcYa5ChG0LQ==",
-      "license": "ISC"
-    }
-  }
-}
-
-
-=== package.json ===
-{
-  "devDependencies": {
-    "@tailwindcss/postcss": "^4.3.3",
-    "@types/topojson-client": "^3.1.5",
-    "autoprefixer": "^10.6.1",
-    "postcss": "^8.5.28",
-    "tailwindcss": "^4.3.3"
-  },
-  "dependencies": {
-    "world-atlas": "^2.0.2"
-  }
-}
-
-
-=== .kilo\.gitignore ===
-node_modules
-package.json
-package-lock.json
-pnpm-lock.yaml
-bun.lock
-yarn.lock
-.gitignore
-agent-manager.json
-
-=== atlas-app\.gitignore ===
+=== .gitignore ===
 # Logs
 logs
 *.log
@@ -1088,7 +25,7 @@ dist-ssr
 *.sw?
 
 
-=== atlas-app\.oxlintrc.json ===
+=== .oxlintrc.json ===
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["react", "typescript", "oxc"],
@@ -1099,7 +36,10 @@ dist-ssr
 }
 
 
-=== atlas-app\index.html ===
+=== context.txt ===
+
+
+=== index.html ===
 <!doctype html>
 <html lang="en">
   <head>
@@ -1119,7 +59,7 @@ dist-ssr
   </body>
 </html>
 
-=== atlas-app\package-lock.json ===
+=== package-lock.json ===
 {
   "name": "atlas-app",
   "version": "0.0.0",
@@ -2819,7 +1759,7 @@ dist-ssr
 }
 
 
-=== atlas-app\package.json ===
+=== package.json ===
 {
   "name": "atlas-app",
   "private": true,
@@ -2853,42 +1793,21 @@ dist-ssr
 }
 
 
-=== atlas-app\README.md ===
-# React + TypeScript + Vite
+=== README.md ===
+# Interactive Travel Atlas
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+An interactive atlas of countries, cultures, landmarks, foods, and people.
+Built with **React 19**, **Vite 8**, **TypeScript 6**, **react-simple-maps**,
+**zustand**, and **world-atlas** TopoJSON data.
 
-Currently, two official plugins are available:
+## Getting started
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+cd atlas-app
+npm install
+npm run dev
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
-
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
-
-
-=== atlas-app\tsconfig.app.json ===
+=== tsconfig.app.json ===
 {
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
@@ -2917,38 +1836,16 @@ See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rule
 }
 
 
-=== atlas-app\tsconfig.json ===
+=== tsconfig.json ===
 {
-  "compilerOptions": {
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "target": "es2023",
-    "lib": ["ES2023", "DOM", "DOM.Iterable"],
-    "module": "esnext",
-    "types": ["vite/client"],
-    "allowArbitraryExtensions": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
-    "moduleDetection": "force",
-    "noEmit": true,
-    "jsx": "react-jsx",
-
-    /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedIndexedAccess": true
-  },
-  "include": ["src"]
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
 }
 
-=== atlas-app\tsconfig.node.json ===
+=== tsconfig.node.json ===
 {
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
@@ -2974,7 +1871,7 @@ See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rule
 }
 
 
-=== atlas-app\vite.config.ts ===
+=== vite.config.ts ===
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
@@ -3001,10 +1898,10 @@ export default defineConfig({
   },
 })
 
-=== atlas-app\public\favicon.svg ===
+=== public\favicon.svg ===
 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="46" fill="none" viewBox="0 0 48 46"><path fill="#863bff" d="M25.946 44.938c-.664.845-2.021.375-2.021-.698V33.937a2.26 2.26 0 0 0-2.262-2.262H10.287c-.92 0-1.456-1.04-.92-1.788l7.48-10.471c1.07-1.497 0-3.578-1.842-3.578H1.237c-.92 0-1.456-1.04-.92-1.788L10.013.474c.214-.297.556-.474.92-.474h28.894c.92 0 1.456 1.04.92 1.788l-7.48 10.471c-1.07 1.498 0 3.579 1.842 3.579h11.377c.943 0 1.473 1.088.89 1.83L25.947 44.94z" style="fill:#863bff;fill:color(display-p3 .5252 .23 1);fill-opacity:1"/><mask id="a" width="48" height="46" x="0" y="0" maskUnits="userSpaceOnUse" style="mask-type:alpha"><path fill="#000" d="M25.842 44.938c-.664.844-2.021.375-2.021-.698V33.937a2.26 2.26 0 0 0-2.262-2.262H10.183c-.92 0-1.456-1.04-.92-1.788l7.48-10.471c1.07-1.498 0-3.579-1.842-3.579H1.133c-.92 0-1.456-1.04-.92-1.787L9.91.473c.214-.297.556-.474.92-.474h28.894c.92 0 1.456 1.04.92 1.788l-7.48 10.471c-1.07 1.498 0 3.578 1.842 3.578h11.377c.943 0 1.473 1.088.89 1.832L25.843 44.94z" style="fill:#000;fill-opacity:1"/></mask><g mask="url(#a)"><g filter="url(#b)"><ellipse cx="5.508" cy="14.704" fill="#ede6ff" rx="5.508" ry="14.704" style="fill:#ede6ff;fill:color(display-p3 .9275 .9033 1);fill-opacity:1" transform="matrix(.00324 1 1 -.00324 -4.47 31.516)"/></g><g filter="url(#c)"><ellipse cx="10.399" cy="29.851" fill="#ede6ff" rx="10.399" ry="29.851" style="fill:#ede6ff;fill:color(display-p3 .9275 .9033 1);fill-opacity:1" transform="matrix(.00324 1 1 -.00324 -39.328 7.883)"/></g><g filter="url(#d)"><ellipse cx="5.508" cy="30.487" fill="#7e14ff" rx="5.508" ry="30.487" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.814 -25.913 -14.639)scale(1 -1)"/></g><g filter="url(#e)"><ellipse cx="5.508" cy="30.599" fill="#7e14ff" rx="5.508" ry="30.599" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.814 -32.644 -3.334)scale(1 -1)"/></g><g filter="url(#f)"><ellipse cx="5.508" cy="30.599" fill="#7e14ff" rx="5.508" ry="30.599" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="matrix(.00324 1 1 -.00324 -34.34 30.47)"/></g><g filter="url(#g)"><ellipse cx="14.072" cy="22.078" fill="#ede6ff" rx="14.072" ry="22.078" style="fill:#ede6ff;fill:color(display-p3 .9275 .9033 1);fill-opacity:1" transform="rotate(93.35 24.506 48.493)scale(-1 1)"/></g><g filter="url(#h)"><ellipse cx="3.47" cy="21.501" fill="#7e14ff" rx="3.47" ry="21.501" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.009 28.708 47.59)scale(-1 1)"/></g><g filter="url(#i)"><ellipse cx="3.47" cy="21.501" fill="#7e14ff" rx="3.47" ry="21.501" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.009 28.708 47.59)scale(-1 1)"/></g><g filter="url(#j)"><ellipse cx=".387" cy="8.972" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(39.51 .387 8.972)"/></g><g filter="url(#k)"><ellipse cx="47.523" cy="-6.092" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 47.523 -6.092)"/></g><g filter="url(#l)"><ellipse cx="41.412" cy="6.333" fill="#47bfff" rx="5.971" ry="9.665" style="fill:#47bfff;fill:color(display-p3 .2799 .748 1);fill-opacity:1" transform="rotate(37.892 41.412 6.333)"/></g><g filter="url(#m)"><ellipse cx="-1.879" cy="38.332" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 -1.88 38.332)"/></g><g filter="url(#n)"><ellipse cx="-1.879" cy="38.332" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 -1.88 38.332)"/></g><g filter="url(#o)"><ellipse cx="35.651" cy="29.907" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 35.651 29.907)"/></g><g filter="url(#p)"><ellipse cx="38.418" cy="32.4" fill="#47bfff" rx="5.971" ry="15.297" style="fill:#47bfff;fill:color(display-p3 .2799 .748 1);fill-opacity:1" transform="rotate(37.892 38.418 32.4)"/></g></g><defs><filter id="b" width="60.045" height="41.654" x="-19.77" y="16.149" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="7.659"/></filter><filter id="c" width="90.34" height="51.437" x="-54.613" y="-7.533" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="7.659"/></filter><filter id="d" width="79.355" height="29.4" x="-49.64" y="2.03" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="e" width="79.579" height="29.4" x="-45.045" y="20.029" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="f" width="79.579" height="29.4" x="-43.513" y="21.178" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="g" width="74.749" height="58.852" x="15.756" y="-17.901" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="7.659"/></filter><filter id="h" width="61.377" height="25.362" x="23.548" y="2.284" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="i" width="61.377" height="25.362" x="23.548" y="2.284" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="j" width="56.045" height="63.649" x="-27.636" y="-22.853" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="k" width="54.814" height="64.646" x="20.116" y="-38.415" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="l" width="33.541" height="35.313" x="24.641" y="-11.323" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="m" width="54.814" height="64.646" x="-29.286" y="6.009" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="n" width="54.814" height="64.646" x="-29.286" y="6.009" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="o" width="54.814" height="64.646" x="8.244" y="-2.416" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="p" width="39.409" height="43.623" x="18.713" y="10.588" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter></defs></svg>
 
-=== atlas-app\public\icons.svg ===
+=== public\icons.svg ===
 <svg xmlns="http://www.w3.org/2000/svg">
   <symbol id="bluesky-icon" viewBox="0 0 16 17">
     <g clip-path="url(#bluesky-clip)"><path fill="#08060d" d="M7.75 7.735c-.693-1.348-2.58-3.86-4.334-5.097-1.68-1.187-2.32-.981-2.74-.79C.188 2.065.1 2.812.1 3.251s.241 3.602.398 4.13c.52 1.744 2.367 2.333 4.07 2.145-2.495.37-4.71 1.278-1.805 4.512 3.196 3.309 4.38-.71 4.987-2.746.608 2.036 1.307 5.91 4.93 2.746 2.72-2.746.747-4.143-1.747-4.512 1.702.189 3.55-.4 4.07-2.145.156-.528.397-3.691.397-4.13s-.088-1.186-.575-1.406c-.42-.19-1.06-.395-2.741.79-1.755 1.24-3.64 3.752-4.334 5.099"/></g>
@@ -3031,9 +1928,11 @@ export default defineConfig({
 </svg>
 
 
-=== atlas-app\src\App.tsx ===
+=== src\App.tsx ===
 import { Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout'
+import ScrollToTop from './components/ScrollToTop'
+import ErrorBoundary from './components/ErrorBoundary'
 import HomePage from './pages/HomePage'
 import AtlasPage from './pages/AtlasPage'
 import CountriesPage from './pages/CountriesPage'
@@ -3045,22 +1944,25 @@ import NotFoundPage from './pages/NotFoundPage'
 
 export default function App() {
   return (
-    <Routes>
-      <Route element={<Layout />}>
-        <Route index element={<HomePage />} />
-        <Route path="atlas" element={<AtlasPage />} />
-        <Route path="countries" element={<CountriesPage />} />
-        <Route path="countries/:slug" element={<CountryPage />} />
-        <Route path="people" element={<PeoplePage />} />
-        <Route path="people/:id" element={<PersonPage />} />
-        <Route path="search" element={<SearchPage />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Route>
-    </Routes>
+    <ErrorBoundary>
+      <ScrollToTop />
+      <Routes>
+        <Route element={<Layout />}>
+          <Route index element={<HomePage />} />
+          <Route path="atlas" element={<AtlasPage />} />
+          <Route path="countries" element={<CountriesPage />} />
+          <Route path="countries/:slug" element={<CountryPage />} />
+          <Route path="people" element={<PeoplePage />} />
+          <Route path="people/:id" element={<PersonPage />} />
+          <Route path="search" element={<SearchPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Route>
+      </Routes>
+    </ErrorBoundary>
   )
 }
 
-=== atlas-app\src\index.css ===
+=== src\index.css ===
 :root {
   color-scheme: light dark;
 
@@ -3235,6 +2137,7 @@ main {
   align-items: center;
   gap: 16px;
   height: var(--header-h);
+  position: relative;
 }
 
 .brand {
@@ -3261,6 +2164,24 @@ main {
   color: white;
   font-size: 15px;
   font-weight: 800;
+  flex-shrink: 0;
+}
+
+.nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  color: var(--text-head);
+  margin-left: auto;
+}
+.nav-toggle:hover {
+  background: var(--surface-2);
 }
 
 .site-nav {
@@ -3293,12 +2214,50 @@ main {
   min-width: 0;
 }
 
+@media (max-width: 860px) {
+  .brand__label {
+    display: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .nav-toggle {
+    display: inline-flex;
+  }
+
+  .site-nav {
+    display: none;
+    position: absolute;
+    top: var(--header-h);
+    left: -20px;
+    right: -20px;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px 20px 16px;
+    gap: 4px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    margin-left: 0;
+  }
+  .site-nav.is-open {
+    display: flex;
+  }
+
+  .site-header__search {
+    flex: 1 1 auto;
+    margin-left: 0;
+    min-width: 0;
+  }
+}
+
 /* ---------- Search ---------- */
 
 .search {
   position: relative;
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .search__icon {
@@ -3325,6 +2284,47 @@ main {
   border-color: var(--accent);
   background: var(--surface);
   box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.search__suggestions {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  z-index: 30;
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.search__suggestion {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+.search__suggestion:hover,
+.search__suggestion.is-active {
+  background: var(--surface-2);
+}
+
+.search__suggestion-icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
 }
 
 /* ---------- Buttons / chips ---------- */
@@ -3394,6 +2394,13 @@ main {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.filter-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
 }
 
 /* ---------- Cards / grids ---------- */
@@ -3486,6 +2493,10 @@ main {
   font-size: 0.9rem;
   font-weight: 500;
 }
+.section__count {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
 
 /* ---------- Hero ---------- */
 
@@ -3542,6 +2553,13 @@ main {
   overflow: hidden;
 }
 
+.map-frame__canvas {
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .map-frame__tooltip {
   position: absolute;
   top: 12px;
@@ -3564,6 +2582,21 @@ main {
   border-radius: var(--radius-lg);
   padding: 20px;
 }
+.side-panel__title {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+}
+.side-panel__meta {
+  color: var(--text-dim);
+  margin-bottom: 16px;
+}
+.side-panel__body {
+  margin-bottom: 16px;
+}
+.side-panel__body--dim {
+  color: var(--text-dim);
+  margin-bottom: 0;
+}
 
 /* ---------- Detail pages ---------- */
 
@@ -3577,6 +2610,15 @@ main {
   font-size: 3rem;
   line-height: 1;
   margin-bottom: 12px;
+}
+
+.detail-hero__title {
+  margin-bottom: 8px;
+}
+
+.detail-hero__lead {
+  color: var(--text-dim);
+  margin: 0;
 }
 
 .detail-hero__meta {
@@ -3627,6 +2669,10 @@ main {
   font-weight: 500;
 }
 
+.is-capitalized {
+  text-transform: capitalize;
+}
+
 .section-block {
   margin-top: 36px;
 }
@@ -3653,6 +2699,47 @@ main {
 .kv dd {
   margin: 0;
   color: var(--text-head);
+}
+
+.tradition-stack {
+  margin-top: 20px;
+  display: grid;
+  gap: 12px;
+}
+
+.aside-block {
+  margin-top: 20px;
+}
+
+/* ---------- Generic link lists ---------- */
+
+.link-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+.link-list--compact {
+  gap: 6px;
+}
+.link-list__item {
+  margin: 0;
+  scroll-margin-top: calc(var(--header-h) + 16px);
+}
+.link-list__title {
+  color: var(--text-head);
+}
+.link-list__meta {
+  color: var(--text-dim);
+}
+.link-list__body {
+  margin: 4px 0 0;
+}
+.link-list__sub {
+  margin: 4px 0 0;
+  color: var(--text-dim);
+  font-size: 0.85rem;
 }
 
 /* ---------- Search results ---------- */
@@ -3718,6 +2805,7 @@ main {
   gap: 10px;
   padding: 64px 20px;
   color: var(--text-dim);
+  width: 100%;
 }
 
 .spinner {
@@ -3772,7 +2860,7 @@ main {
   }
 }
 
-=== atlas-app\src\main.tsx ===
+=== src\main.tsx ===
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
@@ -3792,7 +2880,7 @@ createRoot(rootEl).render(
   </StrictMode>,
 )
 
-=== atlas-app\src\components\CountryCard.tsx ===
+=== src\components\CountryCard.tsx ===
 import { Link } from 'react-router-dom'
 import type { Country } from '../lib/types'
 import { formatArea, formatNumber } from '../lib/utils'
@@ -3819,7 +2907,66 @@ export default function CountryCard({ country }: Props) {
   )
 }
 
-=== atlas-app\src\components\LandmarkCard.tsx ===
+=== src\components\ErrorBoundary.tsx ===
+import { Component, type ErrorInfo, type ReactNode } from 'react'
+
+interface Props {
+  children: ReactNode
+}
+
+interface State {
+  error: Error | null
+}
+
+export default class ErrorBoundary extends Component<Props, State> {
+  state: State = { error: null }
+
+  static getDerivedStateFromError(error: Error): State {
+    return { error }
+  }
+
+  componentDidCatch(error: Error, info: ErrorInfo) {
+    // Replace with real telemetry in production.
+    console.error('Uncaught error in Interactive Travel Atlas:', error, info.componentStack)
+  }
+
+  handleReset = () => this.setState({ error: null })
+
+  handleReload = () => {
+    window.location.reload()
+  }
+
+  render() {
+    if (this.state.error) {
+      return (
+        <div className="container">
+          <div className="empty">
+            <h2>Something went wrong</h2>
+            <p>{this.state.error.message}</p>
+            <p
+              style={{
+                marginTop: 16,
+                display: 'flex',
+                gap: 12,
+                justifyContent: 'center',
+              }}
+            >
+              <button className="btn btn--primary" onClick={this.handleReset}>
+                Try again
+              </button>
+              <button className="btn btn--ghost" onClick={this.handleReload}>
+                Reload page
+              </button>
+            </p>
+          </div>
+        </div>
+      )
+    }
+    return this.props.children
+  }
+}
+
+=== src\components\LandmarkCard.tsx ===
 import type { Landmark } from '../lib/types'
 
 interface Props {
@@ -3841,7 +2988,8 @@ export default function LandmarkCard({ landmark }: Props) {
   )
 }
 
-=== atlas-app\src\components\Layout.tsx ===
+=== src\components\Layout.tsx ===
+import { useState } from 'react'
 import { NavLink, Outlet, Link } from 'react-router-dom'
 import { cx } from '../lib/utils'
 import SearchBar from './SearchBar'
@@ -3854,18 +3002,56 @@ const navItems = [
 ]
 
 export default function Layout() {
+  const [open, setOpen] = useState(false)
+
   return (
     <div className="app-shell">
       <header className="site-header">
         <div className="container site-header__inner">
-          <Link to="/" className="brand" aria-label="Interactive Travel Atlas home">
+          <Link
+            to="/"
+            className="brand"
+            aria-label="Interactive Travel Atlas home"
+            onClick={() => setOpen(false)}
+          >
             <span className="brand__mark" aria-hidden="true">
               A
             </span>
-            <span>Interactive Travel Atlas</span>
+            <span className="brand__label">Interactive Travel Atlas</span>
           </Link>
 
-          <nav className="site-nav" aria-label="Primary">
+          <button
+            type="button"
+            className="nav-toggle"
+            aria-expanded={open}
+            aria-controls="primary-nav"
+            aria-label={open ? 'Close navigation' : 'Open navigation'}
+            onClick={() => setOpen((o) => !o)}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              {open ? (
+                <path
+                  d="M6 6l12 12M18 6L6 18"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              ) : (
+                <path
+                  d="M4 7h16M4 12h16M4 17h16"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              )}
+            </svg>
+          </button>
+
+          <nav
+            id="primary-nav"
+            className={cx('site-nav', open && 'is-open')}
+            aria-label="Primary"
+          >
             {navItems.map((item) => (
               <NavLink
                 key={item.to}
@@ -3874,6 +3060,7 @@ export default function Layout() {
                 className={({ isActive }) =>
                   cx('nav-link', isActive && 'is-active')
                 }
+                onClick={() => setOpen(false)}
               >
                 {item.label}
               </NavLink>
@@ -3899,7 +3086,7 @@ export default function Layout() {
   )
 }
 
-=== atlas-app\src\components\Loading.tsx ===
+=== src\components\Loading.tsx ===
 interface Props {
   label?: string
 }
@@ -3913,7 +3100,7 @@ export default function Loading({ label = 'Loading…' }: Props) {
   )
 }
 
-=== atlas-app\src\components\PersonCard.tsx ===
+=== src\components\PersonCard.tsx ===
 import { Link } from 'react-router-dom'
 import type { Person } from '../lib/types'
 import { titleCase } from '../lib/utils'
@@ -3945,32 +3132,169 @@ export default function PersonCard({ person }: Props) {
   )
 }
 
-=== atlas-app\src\components\SearchBar.tsx ===
-import { useEffect, useState, type FormEvent } from 'react'
+=== src\components\RegionFilter.tsx ===
+import type { Region } from '../lib/types'
+import { cx } from '../lib/utils'
+import { useAtlasStore } from '../store/useAtlasStore'
+
+const regions: Region[] = [
+  'Africa',
+  'Asia',
+  'Europe',
+  'North America',
+  'South America',
+  'Oceania',
+]
+
+interface Props {
+  className?: string
+}
+
+export default function RegionFilter({ className }: Props) {
+  const activeRegions = useAtlasStore((s) => s.activeRegions)
+  const toggleRegion = useAtlasStore((s) => s.toggleRegion)
+
+  return (
+    <div
+      className={cx('chip-row', className)}
+      role="group"
+      aria-label="Filter by region"
+    >
+      {regions.map((region) => {
+        const active = activeRegions.includes(region)
+        return (
+          <button
+            key={region}
+            type="button"
+            className={cx('chip', active && 'is-active')}
+            aria-pressed={active}
+            onClick={() => toggleRegion(region)}
+          >
+            {region}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
+=== src\components\ScrollToTop.tsx ===
+import { useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
+
+/**
+ * Scrolls to the top on route change, or to the hash target when a
+ * `#fragment` is present. The hash target is resolved after a microtask
+ * so that the destination page has had a chance to render.
+ */
+export default function ScrollToTop() {
+  const { pathname, hash } = useLocation()
+
+  useEffect(() => {
+    if (hash) {
+      const id = decodeURIComponent(hash.slice(1))
+      const timer = window.setTimeout(() => {
+        const el = document.getElementById(id)
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        } else {
+          window.scrollTo({ top: 0, behavior: 'auto' })
+        }
+      }, 0)
+      return () => window.clearTimeout(timer)
+    }
+
+    window.scrollTo({ top: 0, behavior: 'auto' })
+  }, [pathname, hash])
+
+  return null
+}
+
+=== src\components\SearchBar.tsx ===
+import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useDebounce } from '../hooks/useDebounce'
+import { search } from '../lib/search'
+import type { SearchResult } from '../lib/types'
+import SearchSuggestions from './SearchSuggestions'
 
 export default function SearchBar() {
   const [params] = useSearchParams()
   const navigate = useNavigate()
   const initial = params.get('q') ?? ''
+
   const [value, setValue] = useState(initial)
+  const [open, setOpen] = useState(false)
+  const [activeIndex, setActiveIndex] = useState(-1)
+  const wrapperRef = useRef<HTMLFormElement>(null)
+
+  const debounced = useDebounce(value, 160)
+  const suggestions: SearchResult[] = debounced.trim()
+    ? search(debounced).slice(0, 6)
+    : []
 
   useEffect(() => {
     setValue(initial)
   }, [initial])
 
+  useEffect(() => {
+    function onPointerDown(e: MouseEvent) {
+      if (!wrapperRef.current) return
+      if (!wrapperRef.current.contains(e.target as Node)) {
+        setOpen(false)
+        setActiveIndex(-1)
+      }
+    }
+    document.addEventListener('mousedown', onPointerDown)
+    return () => document.removeEventListener('mousedown', onPointerDown)
+  }, [])
+
+  function go(href: string) {
+    setOpen(false)
+    setActiveIndex(-1)
+    navigate(href)
+  }
+
   function onSubmit(e: FormEvent) {
     e.preventDefault()
-    const q = value.trim()
-    if (!q) {
+    const trimmed = value.trim()
+
+    if (activeIndex >= 0 && suggestions[activeIndex]) {
+      go(suggestions[activeIndex].href)
+      return
+    }
+    if (!trimmed) {
       navigate('/search')
       return
     }
-    navigate(`/search?q=${encodeURIComponent(q)}`)
+    go(`/search?q=${encodeURIComponent(trimmed)}`)
   }
 
+  function onKeyDown(e: KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Escape') {
+      setOpen(false)
+      setActiveIndex(-1)
+      return
+    }
+    if (!open || suggestions.length === 0) return
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      setActiveIndex((i) => (i + 1) % suggestions.length)
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      setActiveIndex((i) => (i - 1 + suggestions.length) % suggestions.length)
+    }
+  }
+
+  const showSuggestions = open && suggestions.length > 0
+
   return (
-    <form className="search" role="search" onSubmit={onSubmit}>
+    <form
+      ref={wrapperRef}
+      className="search"
+      role="search"
+      onSubmit={onSubmit}
+    >
       <span className="search__icon" aria-hidden="true">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
           <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
@@ -3987,14 +3311,83 @@ export default function SearchBar() {
         className="search__input"
         placeholder="Search countries, people, places…"
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={(e) => {
+          setValue(e.target.value)
+          setOpen(true)
+          setActiveIndex(-1)
+        }}
+        onFocus={() => setOpen(true)}
+        onKeyDown={onKeyDown}
         aria-label="Search"
+        aria-autocomplete="list"
+        aria-expanded={showSuggestions}
+        autoComplete="off"
       />
+      {showSuggestions && (
+        <SearchSuggestions
+          results={suggestions}
+          activeIndex={activeIndex}
+          onSelect={(r) => go(r.href)}
+          onHover={setActiveIndex}
+        />
+      )}
     </form>
   )
 }
 
-=== atlas-app\src\components\ThemeFilter.tsx ===
+=== src\components\SearchSuggestions.tsx ===
+import type { SearchResult } from '../lib/types'
+
+interface Props {
+  results: SearchResult[]
+  activeIndex: number
+  onSelect: (result: SearchResult) => void
+  onHover: (index: number) => void
+}
+
+export default function SearchSuggestions({
+  results,
+  activeIndex,
+  onSelect,
+  onHover,
+}: Props) {
+  return (
+    <ul className="search__suggestions" role="listbox" aria-label="Suggestions">
+      {results.map((r, i) => {
+        const isActive = i === activeIndex
+        return (
+          <li
+            key={`${r.type}-${r.id}`}
+            role="option"
+            aria-selected={isActive}
+          >
+            <button
+              type="button"
+              className={`search__suggestion${isActive ? ' is-active' : ''}`}
+              onMouseEnter={() => onHover(i)}
+              onMouseDown={(e) => {
+                // Prevent the input from losing focus before we navigate.
+                e.preventDefault()
+              }}
+              onClick={() => onSelect(r)}
+            >
+              <span className="search__suggestion-icon" aria-hidden="true">
+                {r.type === 'country' ? '🌍' : '•'}
+              </span>
+              <span>
+                <span className="result-item__label">{r.label}</span>
+                <br />
+                <span className="result-item__sub">{r.secondary}</span>
+              </span>
+            </button>
+          </li>
+        )
+      })}
+    </ul>
+  )
+}
+
+=== src\components\ThemeFilter.tsx ===
 import type { Theme } from '../lib/types'
 import { cx, titleCase } from '../lib/utils'
 import { useAtlasStore } from '../store/useAtlasStore'
@@ -4020,7 +3413,11 @@ export default function ThemeFilter({ themes = allThemes, className }: Props) {
   const toggleTheme = useAtlasStore((s) => s.toggleTheme)
 
   return (
-    <div className={cx('chip-row', className)} role="group" aria-label="Filter by theme">
+    <div
+      className={cx('chip-row', className)}
+      role="group"
+      aria-label="Filter by theme"
+    >
       {themes.map((theme) => {
         const active = activeThemes.includes(theme)
         return (
@@ -4039,103 +3436,16 @@ export default function ThemeFilter({ themes = allThemes, className }: Props) {
   )
 }
 
-=== atlas-app\src\components\WorldMap.tsx ===
-import { lazy, Suspense, useMemo } from 'react'
-import { ComposableMap, Geographies, Geography, ZoomableGroup } from 'react-simple-maps'
+=== src\components\WorldMap.tsx ===
+import { lazy, Suspense } from 'react'
 import type { Country } from '../lib/types'
-import { isoNumericToCountryId } from '../lib/mapConfig'
 import Loading from './Loading'
 
-const worldDataPromise = import('world-atlas/countries-110m.json')
+// The body imports the ~100 KB `world-atlas` TopoJSON, so it lives in its
+// own chunk and is only fetched when a map is rendered.
+const LazyMapBody = lazy(() => import('./WorldMapBody'))
 
-// Lazy component so the topojson chunk only loads when a map is rendered.
-const LazyMapBody = lazy(async () => {
-  const mod = await worldDataPromise
-  const worldData = mod.default
-
-  function MapBody({
-    countries,
-    selectedId,
-    hoveredId,
-    onSelect,
-    onHover,
-  }: Props) {
-    const byId = useMemo(
-      () => new Map(countries.map((c) => [c.id, c])),
-      [countries],
-    )
-
-    const anyActive = useMemo(
-      () =>
-        new Set(
-          countries.flatMap((c) => (c.isoNumeric ? [c.isoNumeric] : [])),
-        ),
-      [countries],
-    )
-
-    return (
-      <ComposableMap
-        projectionConfig={{ scale: 147, center: [0, 20] }}
-        style={{ width: '100%', height: 'auto' }}
-      >
-        <ZoomableGroup>
-          <Geographies geography={worldData}>
-            {({ geographies }) =>
-              geographies.map((geo) => {
-                const numericId = String(geo.id ?? '')
-                const countryId = isoNumericToCountryId[numericId]
-                const hasCountry = !!countryId && anyActive.has(numericId)
-                const country = countryId ? byId.get(countryId) : undefined
-
-                const isSelected = !!countryId && countryId === selectedId
-                const isHovered = !!countryId && countryId === hoveredId
-
-                const fill = isSelected
-                  ? '#7c3aed'
-                  : isHovered
-                    ? '#a855f7'
-                    : hasCountry
-                      ? '#6366f1'
-                      : '#cbd5e1'
-
-                return (
-                  <Geography
-                    key={geo.rsmKey}
-                    geography={geo}
-                    onClick={() => {
-                      if (country) onSelect?.(country.id)
-                    }}
-                    onMouseEnter={() => {
-                      if (countryId && anyActive.has(numericId)) {
-                        onHover?.(countryId)
-                      }
-                    }}
-                    onMouseLeave={() => onHover?.(null)}
-                    fill={fill}
-                    stroke="#ffffff"
-                    strokeWidth={0.4}
-                    style={{
-                      default: { outline: 'none' },
-                      hover: {
-                        outline: 'none',
-                        cursor: country ? 'pointer' : 'default',
-                      },
-                      pressed: { outline: 'none' },
-                    }}
-                  />
-                )
-              })
-            }
-          </Geographies>
-        </ZoomableGroup>
-      </ComposableMap>
-    )
-  }
-
-  return { default: MapBody }
-})
-
-interface Props {
+export interface WorldMapProps {
   countries: Country[]
   selectedId?: string | null
   hoveredId?: string | null
@@ -4143,15 +3453,109 @@ interface Props {
   onHover?: (countryId: string | null) => void
 }
 
-export default function WorldMap(props: Props) {
+export default function WorldMap(props: WorldMapProps) {
   return (
-    <Suspense fallback={<Loading label="Loading map…" />}>
-      <LazyMapBody {...props} />
-    </Suspense>
+    <div className="map-frame__canvas">
+      <Suspense fallback={<Loading label="Loading map…" />}>
+        <LazyMapBody {...props} />
+      </Suspense>
+    </div>
   )
 }
 
-=== atlas-app\src\data\countries.ts ===
+=== src\components\WorldMapBody.tsx ===
+import { useMemo } from 'react'
+import {
+  ComposableMap,
+  Geographies,
+  Geography,
+  ZoomableGroup,
+} from 'react-simple-maps'
+import worldData from 'world-atlas/countries-110m.json'
+import type { Country } from '../lib/types'
+import { isoNumericToCountryId, mapColors } from '../lib/mapConfig'
+import type { WorldMapProps } from './WorldMap'
+
+export default function WorldMapBody({
+  countries,
+  selectedId,
+  hoveredId,
+  onSelect,
+  onHover,
+}: WorldMapProps) {
+  const byId = useMemo(
+    () => new Map(countries.map((c) => [c.id, c])),
+    [countries],
+  )
+
+  const activeNumericIds = useMemo(
+    () =>
+      new Set(
+        countries.flatMap((c) => (c.isoNumeric ? [c.isoNumeric] : [])),
+      ),
+    [countries],
+  )
+
+  return (
+    <ComposableMap
+      projectionConfig={{ scale: 147, center: [0, 20] }}
+      style={{ width: '100%', height: 'auto' }}
+    >
+      <ZoomableGroup>
+        <Geographies geography={worldData}>
+          {({ geographies }) =>
+            geographies.map((geo) => {
+              const numericId = String(geo.id ?? '')
+              const countryId = isoNumericToCountryId[numericId]
+              const hasCountry = !!countryId && activeNumericIds.has(numericId)
+              const country = countryId ? byId.get(countryId) : undefined
+
+              const isSelected = !!countryId && countryId === selectedId
+              const isHovered = !!countryId && countryId === hoveredId
+
+              const fill = isSelected
+                ? mapColors.landSelectedFill
+                : isHovered
+                  ? mapColors.landHoverFill
+                  : hasCountry
+                    ? mapColors.activeFill
+                    : mapColors.landFill
+
+              return (
+                <Geography
+                  key={geo.rsmKey}
+                  geography={geo}
+                  onClick={() => {
+                    if (country) onSelect?.(country.id)
+                  }}
+                  onMouseEnter={() => {
+                    if (countryId && activeNumericIds.has(numericId)) {
+                      onHover?.(countryId)
+                    }
+                  }}
+                  onMouseLeave={() => onHover?.(null)}
+                  fill={fill}
+                  stroke={mapColors.stroke}
+                  strokeWidth={0.4}
+                  style={{
+                    default: { outline: 'none' },
+                    hover: {
+                      outline: 'none',
+                      cursor: country ? 'pointer' : 'default',
+                    },
+                    pressed: { outline: 'none' },
+                  }}
+                />
+              )
+            })
+          }
+        </Geographies>
+      </ZoomableGroup>
+    </ComposableMap>
+  )
+}
+
+=== src\data\countries.ts ===
 import type { Country } from '../lib/types'
 
 export const countries: Country[] = [
@@ -4600,7 +4004,7 @@ export const countries: Country[] = [
   },
 ]
 
-=== atlas-app\src\data\events.ts ===
+=== src\data\events.ts ===
 import type { HistoricalEvent } from '../lib/types'
 
 export const events: HistoricalEvent[] = [
@@ -4795,7 +4199,7 @@ export const events: HistoricalEvent[] = [
   },
 ]
 
-=== atlas-app\src\data\foods.ts ===
+=== src\data\foods.ts ===
 import type { Food } from '../lib/types'
 
 export const foods: Food[] = [
@@ -4990,14 +4394,14 @@ export const foods: Food[] = [
   },
 ]
 
-=== atlas-app\src\data\index.ts ===
+=== src\data\index.ts ===
 export { countries } from './countries'
 export { landmarks } from './landmarks'
 export { events } from './events'
 export { foods } from './foods'
 export { people } from './people'
 
-=== atlas-app\src\data\landmarks.ts ===
+=== src\data\landmarks.ts ===
 import type { Landmark } from '../lib/types'
 
 export const landmarks: Landmark[] = [
@@ -5402,7 +4806,7 @@ export const landmarks: Landmark[] = [
   },
 ]
 
-=== atlas-app\src\data\people.ts ===
+=== src\data\people.ts ===
 import type { Person } from '../lib/types'
 
 export const people: Person[] = [
@@ -5556,7 +4960,7 @@ export const people: Person[] = [
   },
 ]
 
-=== atlas-app\src\hooks\useDebounce.ts ===
+=== src\hooks\useDebounce.ts ===
 import { useEffect, useState } from 'react'
 
 export function useDebounce<T>(value: T, delay = 200): T {
@@ -5570,34 +4974,34 @@ export function useDebounce<T>(value: T, delay = 200): T {
   return debounced
 }
 
-=== atlas-app\src\hooks\useDocumentTitle.ts ===
+=== src\hooks\useDocumentTitle.ts ===
 import { useEffect } from 'react'
+
+const BASE_TITLE = 'Interactive Travel Atlas'
 
 export function useDocumentTitle(title: string) {
   useEffect(() => {
-    const previous = document.title
-    document.title = title ? `${title} · Interactive Travel Atlas` : 'Interactive Travel Atlas'
-    return () => {
-      document.title = previous
-    }
+    document.title = title ? `${title} · ${BASE_TITLE}` : BASE_TITLE
+    // No cleanup: the next page's effect will overwrite the title anyway,
+    // and restoring the previous title causes a visible flash.
   }, [title])
 }
 
-=== atlas-app\src\lib\mapConfig.ts ===
+=== src\lib\mapConfig.ts ===
 /**
  * Maps world-atlas ISO 3166-1 numeric IDs to our internal country IDs.
- * Only countries present in `data/countries.ts` are included here.
+ *
+ * Only countries that actually exist in `data/countries.ts` are listed here;
+ * anything else simply renders as inactive land.
  */
 export const isoNumericToCountryId: Record<string, string> = {
   '250': 'fr-france',
-  '276': 'de-germany',
   '380': 'it-italy',
   '392': 'jp-japan',
   '484': 'mx-mexico',
   '616': 'pl-poland',
   '710': 'za-south-africa',
   '840': 'us-united-states',
-  '076': 'br-brazil',
 }
 
 export const mapProjection = {
@@ -5612,9 +5016,10 @@ export const mapColors = {
   landSelectedFill: '#7c3aed',
   stroke: '#ffffff',
   strokeDark: '#0b0d12',
+  activeFill: '#6366f1',
 }
 
-=== atlas-app\src\lib\search.ts ===
+=== src\lib\search.ts ===
 import type { SearchResult } from './types'
 import { countries } from '../data/countries'
 import { landmarks } from '../data/landmarks'
@@ -5625,6 +5030,11 @@ import { people } from '../data/people'
 function matches(haystack: string[], needle: string): boolean {
   if (!needle) return true
   return haystack.some((h) => h.toLowerCase().includes(needle))
+}
+
+function countrySlug(id: string): string {
+  const c = countries.find((x) => x.id === id)
+  return c?.slug ?? ''
 }
 
 export function buildIndex(): SearchResult[] {
@@ -5700,12 +5110,18 @@ export function buildIndex(): SearchResult[] {
   return results
 }
 
-function countrySlug(id: string): string {
-  const c = countries.find((x) => x.id === id)
-  return c?.slug ?? ''
+/** Lazily-built, module-level cache of the search index. */
+let cachedIndex: SearchResult[] | null = null
+
+export function getSearchIndex(): SearchResult[] {
+  if (!cachedIndex) cachedIndex = buildIndex()
+  return cachedIndex
 }
 
-export function search(query: string, index = buildIndex()): SearchResult[] {
+export function search(
+  query: string,
+  index: SearchResult[] = getSearchIndex(),
+): SearchResult[] {
   const q = query.trim().toLowerCase()
   if (!q) return []
   return index
@@ -5713,7 +5129,7 @@ export function search(query: string, index = buildIndex()): SearchResult[] {
     .slice(0, 60)
 }
 
-=== atlas-app\src\lib\types.ts ===
+=== src\lib\types.ts ===
 export type Region =
   | 'Europe'
   | 'Asia'
@@ -5961,7 +5377,7 @@ export interface SearchResult {
   matchTerms: string[]
 }
 
-=== atlas-app\src\lib\utils.ts ===
+=== src\lib\utils.ts ===
 export function cx(
   ...parts: Array<string | false | null | undefined>
 ): string {
@@ -5988,13 +5404,14 @@ export function titleCase(s: string): string {
   return s.replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
-=== atlas-app\src\pages\AtlasPage.tsx ===
+=== src\pages\AtlasPage.tsx ===
 import { Link } from 'react-router-dom'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { countries } from '../data'
 import { useAtlasStore } from '../store/useAtlasStore'
 import WorldMap from '../components/WorldMap'
 import ThemeFilter from '../components/ThemeFilter'
+import RegionFilter from '../components/RegionFilter'
 import CountryCard from '../components/CountryCard'
 
 export default function AtlasPage() {
@@ -6005,16 +5422,18 @@ export default function AtlasPage() {
   const setSelectedCountry = useAtlasStore((s) => s.setSelectedCountry)
   const setHoveredCountry = useAtlasStore((s) => s.setHoveredCountry)
   const activeThemes = useAtlasStore((s) => s.activeThemes)
+  const activeRegions = useAtlasStore((s) => s.activeRegions)
 
   const selected = countries.find((c) => c.id === selectedCountryId) ?? null
   const hovered = countries.find((c) => c.id === hoveredCountryId) ?? null
 
-  const visibleCountries =
-    activeThemes.length === 0
-      ? countries
-      : countries.filter((c) =>
-          c.themes.some((t) => activeThemes.includes(t)),
-        )
+  const visibleCountries = countries.filter((c) => {
+    const matchesTheme =
+      activeThemes.length === 0 || c.themes.some((t) => activeThemes.includes(t))
+    const matchesRegion =
+      activeRegions.length === 0 || activeRegions.includes(c.region)
+    return matchesTheme && matchesRegion
+  })
 
   return (
     <div className="container">
@@ -6022,12 +5441,13 @@ export default function AtlasPage() {
         <h1>Atlas</h1>
         <p>
           Click a highlighted country to see its culture, landmarks, foods, and
-          people. Use the themes below to narrow the selection.
+          people. Use the filters to narrow the selection.
         </p>
       </div>
 
-      <div style={{ marginBottom: 24 }}>
+      <div className="filter-stack">
         <ThemeFilter />
+        <RegionFilter />
       </div>
 
       <div className="atlas-layout">
@@ -6047,16 +5467,16 @@ export default function AtlasPage() {
         </div>
 
         <aside className="side-panel">
-          <h2 style={{ fontSize: '1.1rem', marginBottom: 12 }}>
+          <h2 className="side-panel__title">
             {selected ? selected.name : 'No country selected'}
           </h2>
 
           {selected ? (
             <>
-              <p style={{ color: 'var(--text-dim)', marginBottom: 16 }}>
+              <p className="side-panel__meta">
                 {selected.capital} · {selected.region}
               </p>
-              <p style={{ marginBottom: 16 }}>{selected.description}</p>
+              <p className="side-panel__body">{selected.description}</p>
               <Link
                 to={`/countries/${selected.slug}`}
                 className="btn btn--primary"
@@ -6065,7 +5485,7 @@ export default function AtlasPage() {
               </Link>
             </>
           ) : (
-            <p style={{ color: 'var(--text-dim)' }}>
+            <p className="side-panel__body side-panel__body--dim">
               Hover a country to preview it, then click to see details.
             </p>
           )}
@@ -6075,13 +5495,11 @@ export default function AtlasPage() {
       <section className="section">
         <div className="section__head">
           <h2>
-            {activeThemes.length > 0
-              ? `Countries matching ${activeThemes.length} theme${
-                  activeThemes.length === 1 ? '' : 's'
-                }`
+            {activeThemes.length + activeRegions.length > 0
+              ? 'Filtered countries'
               : 'All countries'}
           </h2>
-          <span style={{ color: 'var(--text-dim)', fontSize: '0.9rem' }}>
+          <span className="section__count">
             {visibleCountries.length} of {countries.length}
           </span>
         </div>
@@ -6089,7 +5507,7 @@ export default function AtlasPage() {
         {visibleCountries.length === 0 ? (
           <div className="empty">
             <h2>No matches</h2>
-            <p>Try clearing a theme filter.</p>
+            <p>Try clearing a filter.</p>
           </div>
         ) : (
           <div className="grid grid--3">
@@ -6103,41 +5521,62 @@ export default function AtlasPage() {
   )
 }
 
-=== atlas-app\src\pages\CountriesPage.tsx ===
+=== src\pages\CountriesPage.tsx ===
 import { useMemo } from 'react'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { countries } from '../data'
 import { useAtlasStore } from '../store/useAtlasStore'
 import CountryCard from '../components/CountryCard'
 import ThemeFilter from '../components/ThemeFilter'
+import RegionFilter from '../components/RegionFilter'
 
 export default function CountriesPage() {
   useDocumentTitle('Countries')
 
   const activeThemes = useAtlasStore((s) => s.activeThemes)
+  const activeRegions = useAtlasStore((s) => s.activeRegions)
+  const clearFilters = useAtlasStore((s) => s.clearFilters)
 
   const visible = useMemo(() => {
-    if (activeThemes.length === 0) return countries
-    return countries.filter((c) => c.themes.some((t) => activeThemes.includes(t)))
-  }, [activeThemes])
+    return countries.filter((c) => {
+      const matchesTheme =
+        activeThemes.length === 0 ||
+        c.themes.some((t) => activeThemes.includes(t))
+      const matchesRegion =
+        activeRegions.length === 0 || activeRegions.includes(c.region)
+      return matchesTheme && matchesRegion
+    })
+  }, [activeThemes, activeRegions])
+
+  const hasFilters = activeThemes.length + activeRegions.length > 0
 
   return (
     <div className="container">
       <div className="page-head">
         <h1>Countries</h1>
         <p>
-          {visible.length} of {countries.length} countries. Filter by theme.
+          {visible.length} of {countries.length} countries.
+          {hasFilters ? ' Filtered.' : ''}
         </p>
       </div>
 
-      <div style={{ marginBottom: 28 }}>
+      <div className="filter-stack">
         <ThemeFilter />
+        <RegionFilter />
       </div>
 
       {visible.length === 0 ? (
         <div className="empty">
           <h2>No countries match your filters</h2>
-          <p>Try clearing a theme.</p>
+          <p>
+            <button
+              type="button"
+              className="btn btn--ghost"
+              onClick={clearFilters}
+            >
+              Clear filters
+            </button>
+          </p>
         </div>
       ) : (
         <div className="grid grid--3">
@@ -6150,7 +5589,7 @@ export default function CountriesPage() {
   )
 }
 
-=== atlas-app\src\pages\CountryPage.tsx ===
+=== src\pages\CountryPage.tsx ===
 import { Link, useParams } from 'react-router-dom'
 import { countries, landmarks, events, foods, people } from '../data'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
@@ -6168,9 +5607,7 @@ export default function CountryPage() {
   if (!country) return <NotFoundPage />
 
   const countryLandmarks = landmarks.filter((l) => l.countryId === country.id)
-  const countryEvents = events.filter((e) =>
-    e.countryIds.includes(country.id),
-  )
+  const countryEvents = events.filter((e) => e.countryIds.includes(country.id))
   const countryFoods = foods.filter((f) => f.countryId === country.id)
   const countryPeople = people.filter((p) => p.countryId === country.id)
 
@@ -6180,10 +5617,8 @@ export default function CountryPage() {
         <div className="detail-hero__flag" aria-hidden="true">
           {country.flag}
         </div>
-        <h1 style={{ marginBottom: 8 }}>{country.name}</h1>
-        <p style={{ color: 'var(--text-dim)', margin: 0 }}>
-          {country.editorialIntro}
-        </p>
+        <h1 className="detail-hero__title">{country.name}</h1>
+        <p className="detail-hero__lead">{country.editorialIntro}</p>
         <div className="detail-hero__meta">
           <span>{country.region}</span>
           <span>Capital: {country.capital}</span>
@@ -6225,17 +5660,12 @@ export default function CountryPage() {
           {countryEvents.length > 0 && (
             <section className="section-block">
               <h3>Historical events</h3>
-              <ul style={{ display: 'grid', gap: 12 }}>
+              <ul className="link-list">
                 {countryEvents.map((e) => (
-                  <li key={e.id} id={e.id} style={{ listStyle: 'none' }}>
-                    <strong style={{ color: 'var(--text-head)' }}>
-                      {e.name}
-                    </strong>
-                    <span style={{ color: 'var(--text-dim)' }}>
-                      {' '}
-                      · {e.period}
-                    </span>
-                    <p style={{ margin: '4px 0 0' }}>{e.description}</p>
+                  <li key={e.id} id={e.id} className="link-list__item">
+                    <strong className="link-list__title">{e.name}</strong>
+                    <span className="link-list__meta"> · {e.period}</span>
+                    <p className="link-list__body">{e.description}</p>
                   </li>
                 ))}
               </ul>
@@ -6245,20 +5675,12 @@ export default function CountryPage() {
           {countryFoods.length > 0 && (
             <section className="section-block">
               <h3>Foods</h3>
-              <ul style={{ display: 'grid', gap: 12 }}>
+              <ul className="link-list">
                 {countryFoods.map((f) => (
-                  <li key={f.id} id={f.id} style={{ listStyle: 'none' }}>
-                    <strong style={{ color: 'var(--text-head)' }}>
-                      {f.name}
-                    </strong>
-                    <p style={{ margin: '4px 0 0' }}>{f.description}</p>
-                    <p
-                      style={{
-                        margin: '4px 0 0',
-                        color: 'var(--text-dim)',
-                        fontSize: '0.85rem',
-                      }}
-                    >
+                  <li key={f.id} id={f.id} className="link-list__item">
+                    <strong className="link-list__title">{f.name}</strong>
+                    <p className="link-list__body">{f.description}</p>
+                    <p className="link-list__sub">
                       Ingredients: {f.ingredients.join(', ')}
                     </p>
                   </li>
@@ -6285,17 +5707,12 @@ export default function CountryPage() {
             </dl>
 
             {country.culture.traditions.length > 0 && (
-              <div style={{ marginTop: 20, display: 'grid', gap: 12 }}>
+              <div className="tradition-stack">
                 {country.culture.traditions.map((t) => (
                   <div key={t.id}>
-                    <strong style={{ color: 'var(--text-head)' }}>
-                      {t.name}
-                    </strong>
-                    <span style={{ color: 'var(--text-dim)' }}>
-                      {' '}
-                      · {t.category}
-                    </span>
-                    <p style={{ margin: '4px 0 0' }}>{t.description}</p>
+                    <strong className="link-list__title">{t.name}</strong>
+                    <span className="link-list__meta"> · {t.category}</span>
+                    <p className="link-list__body">{t.description}</p>
                   </div>
                 ))}
               </div>
@@ -6325,21 +5742,21 @@ export default function CountryPage() {
               <dt>Major cities</dt>
               <dd>{country.majorCities.join(', ')}</dd>
               <dt>Themes</dt>
-              <dd style={{ textTransform: 'capitalize' }}>
+              <dd className="is-capitalized">
                 {country.themes.map(titleCase).join(', ')}
               </dd>
             </dl>
           </div>
 
           {country.neighboringCountries.length > 0 && (
-            <div style={{ marginTop: 20 }}>
+            <div className="aside-block">
               <h4>Neighbours</h4>
-              <ul style={{ paddingLeft: 0, listStyle: 'none' }}>
+              <ul className="link-list link-list--compact">
                 {country.neighboringCountries.map((id) => {
                   const neighbour = countries.find((c) => c.id === id)
                   if (!neighbour) return null
                   return (
-                    <li key={id} style={{ marginBottom: 6 }}>
+                    <li key={id}>
                       <Link to={`/countries/${neighbour.slug}`}>
                         {neighbour.flag} {neighbour.name}
                       </Link>
@@ -6351,18 +5768,16 @@ export default function CountryPage() {
           )}
 
           {country.relatedCountries.length > 0 && (
-            <div style={{ marginTop: 20 }}>
+            <div className="aside-block">
               <h4>Related countries</h4>
-              <ul style={{ paddingLeft: 0, listStyle: 'none' }}>
+              <ul className="link-list link-list--compact">
                 {country.relatedCountries
-                  .filter(
-                    (id) => !country.neighboringCountries.includes(id),
-                  )
+                  .filter((id) => !country.neighboringCountries.includes(id))
                   .map((id) => {
                     const related = countries.find((c) => c.id === id)
                     if (!related) return null
                     return (
-                      <li key={id} style={{ marginBottom: 6 }}>
+                      <li key={id}>
                         <Link to={`/countries/${related.slug}`}>
                           {related.flag} {related.name}
                         </Link>
@@ -6378,7 +5793,7 @@ export default function CountryPage() {
   )
 }
 
-=== atlas-app\src\pages\HomePage.tsx ===
+=== src\pages\HomePage.tsx ===
 import { Link } from 'react-router-dom'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { countries, people } from '../data'
@@ -6442,7 +5857,7 @@ export default function HomePage() {
   )
 }
 
-=== atlas-app\src\pages\NotFoundPage.tsx ===
+=== src\pages\NotFoundPage.tsx ===
 import { Link } from 'react-router-dom'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 
@@ -6464,7 +5879,7 @@ export default function NotFoundPage() {
   )
 }
 
-=== atlas-app\src\pages\PeoplePage.tsx ===
+=== src\pages\PeoplePage.tsx ===
 import { useMemo } from 'react'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { people } from '../data'
@@ -6511,7 +5926,7 @@ export default function PeoplePage() {
   )
 }
 
-=== atlas-app\src\pages\PersonPage.tsx ===
+=== src\pages\PersonPage.tsx ===
 import { Link, useParams } from 'react-router-dom'
 import {
   people,
@@ -6667,7 +6082,7 @@ export default function PersonPage() {
   )
 }
 
-=== atlas-app\src\pages\SearchPage.tsx ===
+=== src\pages\SearchPage.tsx ===
 import { useMemo } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
@@ -6686,7 +6101,7 @@ const typeLabel: Record<SearchResult['type'], string> = {
 }
 
 export default function SearchPage() {
-  const [params] = useSearchParams()
+  const [params, setParams] = useSearchParams()
   const query = params.get('q') ?? ''
 
   useDocumentTitle(query ? `Search: ${query}` : 'Search')
@@ -6711,6 +6126,19 @@ export default function SearchPage() {
           {query
             ? `${results.length} result${results.length === 1 ? '' : 's'}`
             : 'Use the search bar above to find countries, people, landmarks, foods, and events.'}
+          {query && (
+            <>
+              {' '}
+              <button
+                type="button"
+                className="btn btn--ghost"
+                style={{ padding: '2px 10px', fontSize: '0.8rem' }}
+                onClick={() => setParams({}, { replace: true })}
+              >
+                Clear
+              </button>
+            </>
+          )}
         </p>
       </div>
 
@@ -6746,38 +6174,63 @@ export default function SearchPage() {
   )
 }
 
-=== atlas-app\src\store\useAtlasStore.ts ===
+=== src\store\useAtlasStore.ts ===
 import { create } from 'zustand'
-import type { Theme } from '../lib/types'
+import { persist } from 'zustand/middleware'
+import type { Region, Theme } from '../lib/types'
 
 interface AtlasState {
   selectedCountryId: string | null
   hoveredCountryId: string | null
   activeThemes: Theme[]
+  activeRegions: Region[]
   setSelectedCountry: (id: string | null) => void
   setHoveredCountry: (id: string | null) => void
   toggleTheme: (theme: Theme) => void
+  toggleRegion: (region: Region) => void
   setThemes: (themes: Theme[]) => void
-  clearThemes: () => void
+  setRegions: (regions: Region[]) => void
+  clearFilters: () => void
 }
 
-export const useAtlasStore = create<AtlasState>((set) => ({
-  selectedCountryId: null,
-  hoveredCountryId: null,
-  activeThemes: [],
-  setSelectedCountry: (id) => set({ selectedCountryId: id }),
-  setHoveredCountry: (id) => set({ hoveredCountryId: id }),
-  toggleTheme: (theme) =>
-    set((state) => ({
-      activeThemes: state.activeThemes.includes(theme)
-        ? state.activeThemes.filter((t) => t !== theme)
-        : [...state.activeThemes, theme],
-    })),
-  setThemes: (themes) => set({ activeThemes: themes }),
-  clearThemes: () => set({ activeThemes: [] }),
-}))
+export const useAtlasStore = create<AtlasState>()(
+  persist(
+    (set) => ({
+      selectedCountryId: null,
+      hoveredCountryId: null,
+      activeThemes: [],
+      activeRegions: [],
+      setSelectedCountry: (id) => set({ selectedCountryId: id }),
+      setHoveredCountry: (id) => set({ hoveredCountryId: id }),
+      toggleTheme: (theme) =>
+        set((state) => ({
+          activeThemes: state.activeThemes.includes(theme)
+            ? state.activeThemes.filter((t) => t !== theme)
+            : [...state.activeThemes, theme],
+        })),
+      toggleRegion: (region) =>
+        set((state) => ({
+          activeRegions: state.activeRegions.includes(region)
+            ? state.activeRegions.filter((r) => r !== region)
+            : [...state.activeRegions, region],
+        })),
+      setThemes: (themes) => set({ activeThemes: themes }),
+      setRegions: (regions) => set({ activeRegions: regions }),
+      clearFilters: () => set({ activeThemes: [], activeRegions: [] }),
+    }),
+    {
+      name: 'atlas:filters:v1',
+      // Only persist the filter selections; transient hover/selection state
+      // should always start empty.
+      partialize: (state) => ({
+        activeThemes: state.activeThemes,
+        activeRegions: state.activeRegions,
+      }),
+    },
+  ),
+)
 
-=== atlas-app\src\types\world-atlas.d.ts ===
+=== src\types\world-atlas.d.ts ===
 declare module 'world-atlas/countries-110m.json' {
   const value: {
     type: 'Topology'
