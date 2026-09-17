@@ -2216,7 +2216,7 @@ main {
 .site-header__inner {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   height: var(--header-h);
   position: relative;
 }
@@ -2230,6 +2230,7 @@ main {
   letter-spacing: -0.02em;
   font-size: 1.05rem;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 .brand:hover {
   color: var(--text-head);
@@ -2259,7 +2260,7 @@ main {
   border-radius: var(--radius);
   cursor: pointer;
   color: var(--text-head);
-  margin-left: auto;
+  flex-shrink: 0;
 }
 .nav-toggle:hover {
   background: var(--surface-2);
@@ -2269,7 +2270,7 @@ main {
   display: flex;
   align-items: center;
   gap: 4px;
-  margin-left: 8px;
+  flex-shrink: 0;
 }
 
 .nav-link {
@@ -2289,11 +2290,19 @@ main {
   background: var(--accent-soft);
 }
 
+/* Random-country + favourites (hidden on mobile). */
 .site-header__actions {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-left: 4px;
+  flex-shrink: 0;
+}
+
+/* Theme toggle — always visible, even on mobile. */
+.site-header__theme {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 .icon-btn {
@@ -2352,7 +2361,8 @@ main {
 
 .site-header__search {
   margin-left: auto;
-  flex: 0 1 320px;
+  flex: 1 1 auto;
+  max-width: 420px;
   min-width: 0;
 }
 
@@ -2378,6 +2388,11 @@ main {
     display: none;
   }
 
+  .site-header__search {
+    margin-left: auto;
+    max-width: none;
+  }
+
   .site-nav {
     display: none;
     position: absolute;
@@ -2392,15 +2407,10 @@ main {
     border-bottom: 1px solid var(--border);
     box-shadow: var(--shadow);
     margin-left: 0;
+    z-index: 5;
   }
   .site-nav.is-open {
     display: flex;
-  }
-
-  .site-header__search {
-    flex: 1 1 auto;
-    margin-left: 0;
-    min-width: 0;
   }
 }
 
@@ -3783,6 +3793,7 @@ export default function Breadcrumbs({ items }: Props) {
 }
 
 === src\components\CountryCard.tsx ===
+import { memo } from 'react'
 import { Link } from 'react-router-dom'
 import type { Country } from '../lib/types'
 import { formatArea, formatNumber } from '../lib/utils'
@@ -3793,7 +3804,7 @@ interface Props {
   country: Country
 }
 
-export default function CountryCard({ country }: Props) {
+function CountryCardBase({ country }: Props) {
   const visited = useUserStore((s) => s.visited.includes(country.id))
 
   return (
@@ -3822,6 +3833,9 @@ export default function CountryCard({ country }: Props) {
     </div>
   )
 }
+
+const CountryCard = memo(CountryCardBase)
+export default CountryCard
 
 === src\components\ErrorBoundary.tsx ===
 import { Component, type ErrorInfo, type ReactNode } from 'react'
@@ -3935,6 +3949,7 @@ export default function FavoriteButton({ kind, id, label }: Props) {
 }
 
 === src\components\LandmarkCard.tsx ===
+import { memo } from 'react'
 import { Link } from 'react-router-dom'
 import type { Landmark } from '../lib/types'
 import FavoriteButton from './FavoriteButton'
@@ -3943,14 +3958,10 @@ interface Props {
   landmark: Landmark
 }
 
-export default function LandmarkCard({ landmark }: Props) {
+function LandmarkCardBase({ landmark }: Props) {
   return (
     <div className="card-wrap">
-      <Link
-        to={`/landmarks/${landmark.id}`}
-        className="card"
-        id={landmark.id}
-      >
+      <Link to={`/landmarks/${landmark.id}`} className="card" id={landmark.id}>
         <span className="tag">{landmark.type}</span>
         <h3 className="card__title" style={{ marginTop: 10 }}>
           {landmark.name}
@@ -3971,9 +3982,12 @@ export default function LandmarkCard({ landmark }: Props) {
   )
 }
 
+const LandmarkCard = memo(LandmarkCardBase)
+export default LandmarkCard
+
 === src\components\Layout.tsx ===
-import { useEffect, useState } from 'react'
-import { NavLink, Outlet, Link } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { NavLink, Outlet, Link, useLocation } from 'react-router-dom'
 import { cx } from '../lib/utils'
 import SearchBar from './SearchBar'
 import ScrollTopButton from './ScrollTopButton'
@@ -3981,6 +3995,7 @@ import RandomCountryButton from './RandomCountryButton'
 import ThemeToggle from './ThemeToggle'
 import { useUserStore } from '../store/useUserStore'
 import { useTheme } from '../hooks/useTheme'
+import { useOnClickOutside } from '../hooks/useOnClickOutside'
 
 const navItems = [
   { to: '/', label: 'Home', end: true },
@@ -3996,11 +4011,23 @@ const navItems = [
 export default function Layout() {
   const [open, setOpen] = useState(false)
   const favCount = useUserStore((s) => s.favorites.length)
+  const headerRef = useRef<HTMLElement>(null)
+  const location = useLocation()
 
   useTheme()
 
+  // Close the mobile menu when clicking outside the header.
+  useOnClickOutside(headerRef, () => setOpen(false), open)
+
+  // Close on route change so the next page never opens with the menu open.
+  useEffect(() => {
+    setOpen(false)
+  }, [location.pathname])
+
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') setOpen(false)
+
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         const input = document.getElementById(
           'global-search',
@@ -4018,7 +4045,7 @@ export default function Layout() {
 
   return (
     <div className="app-shell">
-      <header className="site-header">
+      <header className="site-header" ref={headerRef}>
         <div className="container site-header__inner">
           <Link
             to="/"
@@ -4031,33 +4058,6 @@ export default function Layout() {
             </span>
             <span className="brand__label">Interactive Travel Atlas</span>
           </Link>
-
-          <button
-            type="button"
-            className="nav-toggle"
-            aria-expanded={open}
-            aria-controls="primary-nav"
-            aria-label={open ? 'Close navigation' : 'Open navigation'}
-            onClick={() => setOpen((o) => !o)}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              {open ? (
-                <path
-                  d="M6 6l12 12M18 6L6 18"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              ) : (
-                <path
-                  d="M4 7h16M4 12h16M4 17h16"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              )}
-            </svg>
-          </button>
 
           <nav
             id="primary-nav"
@@ -4078,6 +4078,10 @@ export default function Layout() {
               </NavLink>
             ))}
           </nav>
+
+          <div className="site-header__search">
+            <SearchBar />
+          </div>
 
           <div className="site-header__actions">
             <RandomCountryButton />
@@ -4105,11 +4109,36 @@ export default function Layout() {
             </Link>
           </div>
 
-          <ThemeToggle />
-
-          <div className="site-header__search">
-            <SearchBar />
+          <div className="site-header__theme">
+            <ThemeToggle />
           </div>
+
+          <button
+            type="button"
+            className="nav-toggle"
+            aria-expanded={open}
+            aria-controls="primary-nav"
+            aria-label={open ? 'Close navigation' : 'Open navigation'}
+            onClick={() => setOpen((o) => !o)}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              {open ? (
+                <path
+                  d="M6 6l12 12M18 6L6 18"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              ) : (
+                <path
+                  d="M4 7h16M4 12h16M4 17h16"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              )}
+            </svg>
+          </button>
         </div>
       </header>
 
@@ -4196,6 +4225,7 @@ export default function NoteEditor({ countryId, countryName }: Props) {
 }
 
 === src\components\PersonCard.tsx ===
+import { memo } from 'react'
 import { Link } from 'react-router-dom'
 import type { Person } from '../lib/types'
 import { titleCase } from '../lib/utils'
@@ -4205,7 +4235,7 @@ interface Props {
   person: Person
 }
 
-export default function PersonCard({ person }: Props) {
+function PersonCardBase({ person }: Props) {
   const dates =
     person.birth && person.death
       ? `${person.birth}–${person.death}`
@@ -4232,6 +4262,9 @@ export default function PersonCard({ person }: Props) {
     </div>
   )
 }
+
+const PersonCard = memo(PersonCardBase)
+export default PersonCard
 
 === src\components\RandomCountryButton.tsx ===
 import { useNavigate } from 'react-router-dom'
@@ -4352,27 +4385,44 @@ import { useLocation } from 'react-router-dom'
 
 /**
  * Scrolls to the top on route change, or to the hash target when a
- * `#fragment` is present. The hash target is resolved after a microtask
- * so that the destination page has had a chance to render.
+ * `#fragment` is present. Because the destination page may render
+ * asynchronously (lazy chunks, data lookups), the hash target is retried a
+ * few times before falling back to the top of the page.
  */
 export default function ScrollToTop() {
   const { pathname, hash } = useLocation()
 
   useEffect(() => {
-    if (hash) {
-      const id = decodeURIComponent(hash.slice(1))
-      const timer = window.setTimeout(() => {
-        const el = document.getElementById(id)
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-        } else {
-          window.scrollTo({ top: 0, behavior: 'auto' })
-        }
-      }, 0)
-      return () => window.clearTimeout(timer)
+    if (!hash) {
+      window.scrollTo({ top: 0, behavior: 'auto' })
+      return
     }
 
-    window.scrollTo({ top: 0, behavior: 'auto' })
+    const id = decodeURIComponent(hash.slice(1))
+    let cancelled = false
+    let attempts = 0
+    const MAX_ATTEMPTS = 12
+    const RETRY_MS = 40
+
+    function tryScroll() {
+      if (cancelled) return
+      const el = document.getElementById(id)
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        return
+      }
+      attempts += 1
+      if (attempts < MAX_ATTEMPTS) {
+        window.setTimeout(tryScroll, RETRY_MS)
+      } else {
+        window.scrollTo({ top: 0, behavior: 'auto' })
+      }
+    }
+
+    tryScroll()
+    return () => {
+      cancelled = true
+    }
   }, [pathname, hash])
 
   return null
@@ -4774,7 +4824,12 @@ import {
 } from 'react-simple-maps'
 import type { GeoJsonObject } from 'geojson'
 import worldData from 'world-atlas/countries-110m.json'
-import { isoNumericToCountryId, mapColors } from '../lib/mapConfig'
+import {
+  getMapPalette,
+  isoNumericToCountryId,
+  mapProjection,
+} from '../lib/mapConfig'
+import { useResolvedTheme } from '../hooks/useResolvedTheme'
 import type { WorldMapProps } from './WorldMap'
 
 export default function WorldMapBody({
@@ -4785,6 +4840,9 @@ export default function WorldMapBody({
   onSelect,
   onHover,
 }: WorldMapProps) {
+  const theme = useResolvedTheme()
+  const palette = getMapPalette(theme)
+
   const byId = useMemo(
     () => new Map(countries.map((c) => [c.id, c])),
     [countries],
@@ -4805,7 +4863,7 @@ export default function WorldMapBody({
 
   return (
     <ComposableMap
-      projectionConfig={{ scale: 147, center: [0, 20] }}
+      projectionConfig={mapProjection}
       style={{ width: '100%', height: 'auto' }}
     >
       <ZoomableGroup>
@@ -4822,14 +4880,14 @@ export default function WorldMapBody({
               const isVisited = !!countryId && visitedSet.has(countryId)
 
               const fill = isSelected
-                ? mapColors.landSelectedFill
+                ? palette.landSelectedFill
                 : isHovered
-                  ? mapColors.landHoverFill
+                  ? palette.landHoverFill
                   : isVisited
-                    ? mapColors.visitedFill
+                    ? palette.visitedFill
                     : hasCountry
-                      ? mapColors.activeFill
-                      : mapColors.landFill
+                      ? palette.activeFill
+                      : palette.landFill
 
               return (
                 <Geography
@@ -4845,7 +4903,7 @@ export default function WorldMapBody({
                   }}
                   onMouseLeave={() => onHover?.(null)}
                   fill={fill}
-                  stroke={mapColors.stroke}
+                  stroke={palette.stroke}
                   strokeWidth={0.4}
                   style={{
                     outline: 'none',
@@ -6293,6 +6351,81 @@ export function useDocumentTitle(title: string) {
   }, [title])
 }
 
+=== src\hooks\useOnClickOutside.ts ===
+import { useEffect, useRef, type RefObject } from 'react'
+
+/**
+ * Calls `handler` whenever a pointer event occurs outside `ref`.
+ * `enabled` lets callers attach/detach the listener conditionally.
+ *
+ * The handler is stored in a ref so the caller does not need to memoise it.
+ */
+export function useOnClickOutside<T extends HTMLElement>(
+  ref: RefObject<T | null>,
+  handler: (e: MouseEvent | TouchEvent) => void,
+  enabled = true,
+) {
+  const handlerRef = useRef(handler)
+
+  useEffect(() => {
+    handlerRef.current = handler
+  })
+
+  useEffect(() => {
+    if (!enabled) return
+
+    function listener(e: MouseEvent | TouchEvent) {
+      const el = ref.current
+      if (!el || el.contains(e.target as Node)) return
+      handlerRef.current(e)
+    }
+
+    document.addEventListener('mousedown', listener)
+    document.addEventListener('touchstart', listener)
+    return () => {
+      document.removeEventListener('mousedown', listener)
+      document.removeEventListener('touchstart', listener)
+    }
+  }, [ref, enabled])
+}
+
+=== src\hooks\useResolvedTheme.ts ===
+import { useEffect, useState } from 'react'
+import { useUserStore } from '../store/useUserStore'
+
+/**
+ * Resolves the persisted `theme` preference into an effective
+ * `'light' | 'dark'` value, following the OS setting when the preference is
+ * `'system'` and staying in sync when the OS scheme changes at runtime.
+ */
+export function useResolvedTheme(): 'light' | 'dark' {
+  const theme = useUserStore((s) => s.theme)
+  const [systemDark, setSystemDark] = useState<boolean>(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return false
+    return window.matchMedia('(prefers-color-scheme: dark)').matches
+  })
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return
+    const mql = window.matchMedia('(prefers-color-scheme: dark)')
+    function onChange(e: MediaQueryListEvent) {
+      setSystemDark(e.matches)
+    }
+    // Safari < 14 falls back to the deprecated addListener API.
+    if (typeof mql.addEventListener === 'function') {
+      mql.addEventListener('change', onChange)
+      return () => mql.removeEventListener('change', onChange)
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ;(mql as any).addListener(onChange)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return () => (mql as any).removeListener(onChange)
+  }, [])
+
+  if (theme === 'system') return systemDark ? 'dark' : 'light'
+  return theme
+}
+
 === src\hooks\useTheme.ts ===
 import { useEffect } from 'react'
 import { useUserStore } from '../store/useUserStore'
@@ -6340,16 +6473,43 @@ export const mapProjection = {
   center: [0, 20] as [number, number],
 }
 
-export const mapColors = {
+/** The set of colours the map needs for a single render pass. */
+export interface MapPalette {
+  /** Land for countries that are not part of the atlas. */
+  landFill: string
+  /** Hover highlight. */
+  landHoverFill: string
+  /** Selected-country highlight. */
+  landSelectedFill: string
+  /** Country outline. */
+  stroke: string
+  /** Countries present in the atlas but not selected/hovered/visited. */
+  activeFill: string
+  /** Countries the user has marked as visited. */
+  visitedFill: string
+}
+
+const lightPalette: MapPalette = {
   landFill: '#cbd5e1',
-  landFillDark: '#334155',
   landHoverFill: '#a855f7',
   landSelectedFill: '#7c3aed',
   stroke: '#ffffff',
-  strokeDark: '#0b0d12',
   activeFill: '#6366f1',
-  /** Fill used for countries the user has marked as visited. */
   visitedFill: '#16a34a',
+}
+
+const darkPalette: MapPalette = {
+  landFill: '#334155',
+  landHoverFill: '#c084fc',
+  landSelectedFill: '#a855f7',
+  stroke: '#0b0d12',
+  activeFill: '#818cf8',
+  visitedFill: '#22c55e',
+}
+
+/** Return the map palette for the given resolved theme. */
+export function getMapPalette(theme: 'light' | 'dark'): MapPalette {
+  return theme === 'dark' ? darkPalette : lightPalette
 }
 
 === src\lib\search.ts ===
@@ -6360,14 +6520,13 @@ import { events } from '../data/events'
 import { foods } from '../data/foods'
 import { people } from '../data/people'
 
-function matches(haystack: string[], needle: string): boolean {
-  if (!needle) return true
-  return haystack.some((h) => h.toLowerCase().includes(needle))
-}
-
 function countrySlug(id: string): string {
   const c = countries.find((x) => x.id === id)
   return c?.slug ?? ''
+}
+
+function escapeRegex(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
 export function buildIndex(): SearchResult[] {
@@ -6386,6 +6545,7 @@ export function buildIndex(): SearchResult[] {
         c.capital,
         c.region,
         c.slug,
+        c.description,
         ...c.majorCities,
         ...c.culturalRegions,
       ],
@@ -6451,15 +6611,46 @@ export function getSearchIndex(): SearchResult[] {
   return cachedIndex
 }
 
+/**
+ * Score a single result against the query. Higher is better; 0 means the
+ * result should be filtered out. Scoring favours label matches over match
+ * terms, and prefix / word-boundary matches over mid-word hits.
+ */
+function scoreResult(r: SearchResult, q: string): number {
+  const label = r.label.toLowerCase()
+
+  if (label === q) return 100
+  if (label.startsWith(q)) return 80
+  if (label.includes(` ${q}`) || label.includes(`(${q}`)) return 60
+  if (label.includes(q)) return 40
+
+  let best = 0
+  for (const term of r.matchTerms) {
+    if (!term) continue
+    const t = term.toLowerCase()
+    if (t === q) best = Math.max(best, 50)
+    else if (t.startsWith(q)) best = Math.max(best, 30)
+    else if (new RegExp(`\\b${escapeRegex(q)}`).test(t)) best = Math.max(best, 25)
+    else if (t.includes(q)) best = Math.max(best, 15)
+  }
+  return best
+}
+
 export function search(
   query: string,
   index: SearchResult[] = getSearchIndex(),
 ): SearchResult[] {
   const q = query.trim().toLowerCase()
   if (!q) return []
-  return index
-    .filter((r) => matches(r.matchTerms, q) || r.label.toLowerCase().includes(q))
-    .slice(0, 60)
+
+  const scored: Array<{ r: SearchResult; score: number }> = []
+  for (const r of index) {
+    const score = scoreResult(r, q)
+    if (score > 0) scored.push({ r, score })
+  }
+
+  scored.sort((a, b) => b.score - a.score)
+  return scored.slice(0, 60).map((x) => x.r)
 }
 
 === src\lib\types.ts ===
@@ -6752,10 +6943,11 @@ export function titleCase(s: string): string {
 === src\pages\AtlasPage.tsx ===
 import { Link } from 'react-router-dom'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import { useResolvedTheme } from '../hooks/useResolvedTheme'
 import { countries } from '../data'
 import { useAtlasStore } from '../store/useAtlasStore'
 import { useUserStore } from '../store/useUserStore'
-import { mapColors } from '../lib/mapConfig'
+import { getMapPalette } from '../lib/mapConfig'
 import WorldMap from '../components/WorldMap'
 import ThemeFilter from '../components/ThemeFilter'
 import RegionFilter from '../components/RegionFilter'
@@ -6763,6 +6955,9 @@ import CountryCard from '../components/CountryCard'
 
 export default function AtlasPage() {
   useDocumentTitle('Atlas')
+
+  const theme = useResolvedTheme()
+  const palette = getMapPalette(theme)
 
   const selectedCountryId = useAtlasStore((s) => s.selectedCountryId)
   const hoveredCountryId = useAtlasStore((s) => s.hoveredCountryId)
@@ -6827,28 +7022,28 @@ export default function AtlasPage() {
             <span className="map-legend__item">
               <span
                 className="map-legend__swatch"
-                style={{ background: mapColors.activeFill }}
+                style={{ background: palette.activeFill }}
               />
               In atlas
             </span>
             <span className="map-legend__item">
               <span
                 className="map-legend__swatch"
-                style={{ background: mapColors.landHoverFill }}
+                style={{ background: palette.landHoverFill }}
               />
               Hovered
             </span>
             <span className="map-legend__item">
               <span
                 className="map-legend__swatch"
-                style={{ background: mapColors.landSelectedFill }}
+                style={{ background: palette.landSelectedFill }}
               />
               Selected
             </span>
             <span className="map-legend__item">
               <span
                 className="map-legend__swatch"
-                style={{ background: mapColors.visitedFill }}
+                style={{ background: palette.visitedFill }}
               />
               Visited
             </span>
@@ -8696,6 +8891,11 @@ interface AtlasState {
   clearFilters: () => void
 }
 
+interface PersistedAtlasState {
+  activeThemes: Theme[]
+  activeRegions: Region[]
+}
+
 export const useAtlasStore = create<AtlasState>()(
   persist(
     (set) => ({
@@ -8723,12 +8923,15 @@ export const useAtlasStore = create<AtlasState>()(
     }),
     {
       name: 'atlas:filters:v1',
+      version: 1,
       // Only persist the filter selections; transient hover/selection state
       // should always start empty.
-      partialize: (state) => ({
+      partialize: (state): PersistedAtlasState => ({
         activeThemes: state.activeThemes,
         activeRegions: state.activeRegions,
       }),
+      // v0 → v1: schema unchanged; keep the user's filters intact.
+      migrate: (persisted) => persisted as PersistedAtlasState,
     },
   ),
 )
@@ -8770,6 +8973,8 @@ export const favoriteKey = (kind: FavoriteKind, id: string): string =>
   `${kind}:${id}`
 
 const MAX_RECENTS = 12
+const STORAGE_KEY = 'atlas:user:v1'
+const STORAGE_VERSION = 1
 
 export const useUserStore = create<UserState>()(
   persist(
@@ -8826,7 +9031,10 @@ export const useUserStore = create<UserState>()(
       setTheme: (theme) => set({ theme }),
     }),
     {
-      name: 'atlas:user:v1',
+      name: STORAGE_KEY,
+      version: STORAGE_VERSION,
+      // v0 → v1: schema unchanged; keep the user's data intact.
+      migrate: (persisted) => persisted as UserState,
     },
   ),
 )

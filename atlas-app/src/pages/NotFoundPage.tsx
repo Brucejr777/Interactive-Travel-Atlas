@@ -9,7 +9,7 @@ export default function NotFoundPage() {
       <div className="empty">
         <h2>Page not found</h2>
         <p>The page you’re looking for doesn’t exist in this atlas.</p>
-        <p style={{ marginTop: 16 }}>
+        <p style={{ marginTop: 24 }}>
           <Link to="/" className="btn btn--primary">
             Back to home
           </Link>

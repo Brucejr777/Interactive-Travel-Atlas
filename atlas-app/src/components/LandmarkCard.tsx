@@ -11,12 +11,13 @@ function LandmarkCardBase({ landmark }: Props) {
   return (
     <div className="card-wrap">
       <Link to={`/landmarks/${landmark.id}`} className="card" id={landmark.id}>
-        <span className="tag">{landmark.type}</span>
-        <h3 className="card__title" style={{ marginTop: 10 }}>
-          {landmark.name}
-        </h3>
+        <div className="card__tag">
+          <span className="tag">{landmark.type}</span>
+        </div>
+        <h3 className="card__title">{landmark.name}</h3>
         <p className="card__meta">
-          {landmark.city ?? ''} · {landmark.period}
+          {landmark.city ? `${landmark.city} · ` : ''}
+          {landmark.period}
         </p>
         <p className="card__desc">{landmark.description}</p>
       </Link>

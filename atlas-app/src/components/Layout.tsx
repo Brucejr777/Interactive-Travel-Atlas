@@ -20,8 +20,18 @@ const navItems = [
   { to: '/insights', label: 'Insights' },
 ]
 
+const footerNav = [
+  { to: '/atlas', label: 'Atlas' },
+  { to: '/countries', label: 'Countries' },
+  { to: '/people', label: 'People' },
+  { to: '/timeline', label: 'Timeline' },
+  { to: '/quiz', label: 'Quiz' },
+  { to: '/favorites', label: 'Favorites' },
+]
+
 export default function Layout() {
   const [open, setOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const favCount = useUserStore((s) => s.favorites.length)
   const headerRef = useRef<HTMLElement>(null)
   const location = useLocation()
@@ -35,6 +45,16 @@ export default function Layout() {
   useEffect(() => {
     setOpen(false)
   }, [location.pathname])
+
+  // Elevate the header once the user scrolls.
+  useEffect(() => {
+    function onScroll() {
+      setScrolled(window.scrollY > 8)
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
@@ -57,7 +77,10 @@ export default function Layout() {
 
   return (
     <div className="app-shell">
-      <header className="site-header" ref={headerRef}>
+      <header
+        className={cx('site-header', scrolled && 'is-scrolled')}
+        ref={headerRef}
+      >
         <div className="container site-header__inner">
           <Link
             to="/"
@@ -109,7 +132,7 @@ export default function Layout() {
                 viewBox="0 0 24 24"
                 fill={favCount > 0 ? 'currentColor' : 'none'}
                 stroke="currentColor"
-                strokeWidth="2"
+                strokeWidth="1.9"
                 strokeLinejoin="round"
                 aria-hidden="true"
               >
@@ -138,14 +161,14 @@ export default function Layout() {
                 <path
                   d="M6 6l12 12M18 6L6 18"
                   stroke="currentColor"
-                  strokeWidth="2"
+                  strokeWidth="1.9"
                   strokeLinecap="round"
                 />
               ) : (
                 <path
                   d="M4 7h16M4 12h16M4 17h16"
                   stroke="currentColor"
-                  strokeWidth="2"
+                  strokeWidth="1.9"
                   strokeLinecap="round"
                 />
               )}
@@ -160,7 +183,32 @@ export default function Layout() {
 
       <footer className="site-footer">
         <div className="container">
-          Built with React, Vite, react-simple-maps, and world-atlas data.
+          <div className="site-footer__inner">
+            <div className="site-footer__brand">
+              <span className="brand__mark" aria-hidden="true">
+                A
+              </span>
+              <div>
+                <strong>Interactive Travel Atlas</strong>
+                <p>
+                  An open atlas of countries, cultures, landmarks, foods, and
+                  the people who shaped them.
+                </p>
+              </div>
+            </div>
+
+            <nav className="site-footer__nav" aria-label="Footer">
+              {footerNav.map((item) => (
+                <Link key={item.to} to={item.to}>
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+
+          <p className="site-footer__copy">
+            Built with React, Vite, react-simple-maps, and world-atlas data.
+          </p>
         </div>
       </footer>
 

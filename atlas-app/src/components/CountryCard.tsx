@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, type CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import type { Country } from '../lib/types'
 import { formatArea, formatNumber } from '../lib/utils'
@@ -12,6 +12,8 @@ interface Props {
 function CountryCardBase({ country }: Props) {
   const visited = useUserStore((s) => s.visited.includes(country.id))
 
+  const accent = { '--card-accent': country.color } as CSSProperties
+
   return (
     <div className="card-wrap">
       {visited && (
@@ -19,7 +21,11 @@ function CountryCardBase({ country }: Props) {
           ✓ Visited
         </span>
       )}
-      <Link to={`/countries/${country.slug}`} className="card">
+      <Link
+        to={`/countries/${country.slug}`}
+        className="card"
+        style={accent}
+      >
         <div className="card__flag" aria-hidden="true">
           {country.flag}
         </div>
@@ -28,7 +34,7 @@ function CountryCardBase({ country }: Props) {
           {country.region} · {country.capital}
         </p>
         <p className="card__desc">{country.description}</p>
-        <p className="card__meta" style={{ marginTop: 12 }}>
+        <p className="card__stats">
           {formatNumber(country.population)} people · {formatArea(country.area)}
         </p>
       </Link>
