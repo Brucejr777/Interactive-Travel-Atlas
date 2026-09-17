@@ -16,7 +16,7 @@ const typeLabel: Record<SearchResult['type'], string> = {
 }
 
 export default function SearchPage() {
-  const [params] = useSearchParams()
+  const [params, setParams] = useSearchParams()
   const query = params.get('q') ?? ''
 
   useDocumentTitle(query ? `Search: ${query}` : 'Search')
@@ -41,6 +41,19 @@ export default function SearchPage() {
           {query
             ? `${results.length} result${results.length === 1 ? '' : 's'}`
             : 'Use the search bar above to find countries, people, landmarks, foods, and events.'}
+          {query && (
+            <>
+              {' '}
+              <button
+                type="button"
+                className="btn btn--ghost"
+                style={{ padding: '2px 10px', fontSize: '0.8rem' }}
+                onClick={() => setParams({}, { replace: true })}
+              >
+                Clear
+              </button>
+            </>
+          )}
         </p>
       </div>
 

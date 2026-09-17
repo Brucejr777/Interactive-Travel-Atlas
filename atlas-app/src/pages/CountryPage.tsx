@@ -15,9 +15,7 @@ export default function CountryPage() {
   if (!country) return <NotFoundPage />
 
   const countryLandmarks = landmarks.filter((l) => l.countryId === country.id)
-  const countryEvents = events.filter((e) =>
-    e.countryIds.includes(country.id),
-  )
+  const countryEvents = events.filter((e) => e.countryIds.includes(country.id))
   const countryFoods = foods.filter((f) => f.countryId === country.id)
   const countryPeople = people.filter((p) => p.countryId === country.id)
 
@@ -27,10 +25,8 @@ export default function CountryPage() {
         <div className="detail-hero__flag" aria-hidden="true">
           {country.flag}
         </div>
-        <h1 style={{ marginBottom: 8 }}>{country.name}</h1>
-        <p style={{ color: 'var(--text-dim)', margin: 0 }}>
-          {country.editorialIntro}
-        </p>
+        <h1 className="detail-hero__title">{country.name}</h1>
+        <p className="detail-hero__lead">{country.editorialIntro}</p>
         <div className="detail-hero__meta">
           <span>{country.region}</span>
           <span>Capital: {country.capital}</span>
@@ -72,17 +68,12 @@ export default function CountryPage() {
           {countryEvents.length > 0 && (
             <section className="section-block">
               <h3>Historical events</h3>
-              <ul style={{ display: 'grid', gap: 12 }}>
+              <ul className="link-list">
                 {countryEvents.map((e) => (
-                  <li key={e.id} id={e.id} style={{ listStyle: 'none' }}>
-                    <strong style={{ color: 'var(--text-head)' }}>
-                      {e.name}
-                    </strong>
-                    <span style={{ color: 'var(--text-dim)' }}>
-                      {' '}
-                      · {e.period}
-                    </span>
-                    <p style={{ margin: '4px 0 0' }}>{e.description}</p>
+                  <li key={e.id} id={e.id} className="link-list__item">
+                    <strong className="link-list__title">{e.name}</strong>
+                    <span className="link-list__meta"> · {e.period}</span>
+                    <p className="link-list__body">{e.description}</p>
                   </li>
                 ))}
               </ul>
@@ -92,20 +83,12 @@ export default function CountryPage() {
           {countryFoods.length > 0 && (
             <section className="section-block">
               <h3>Foods</h3>
-              <ul style={{ display: 'grid', gap: 12 }}>
+              <ul className="link-list">
                 {countryFoods.map((f) => (
-                  <li key={f.id} id={f.id} style={{ listStyle: 'none' }}>
-                    <strong style={{ color: 'var(--text-head)' }}>
-                      {f.name}
-                    </strong>
-                    <p style={{ margin: '4px 0 0' }}>{f.description}</p>
-                    <p
-                      style={{
-                        margin: '4px 0 0',
-                        color: 'var(--text-dim)',
-                        fontSize: '0.85rem',
-                      }}
-                    >
+                  <li key={f.id} id={f.id} className="link-list__item">
+                    <strong className="link-list__title">{f.name}</strong>
+                    <p className="link-list__body">{f.description}</p>
+                    <p className="link-list__sub">
                       Ingredients: {f.ingredients.join(', ')}
                     </p>
                   </li>
@@ -132,17 +115,12 @@ export default function CountryPage() {
             </dl>
 
             {country.culture.traditions.length > 0 && (
-              <div style={{ marginTop: 20, display: 'grid', gap: 12 }}>
+              <div className="tradition-stack">
                 {country.culture.traditions.map((t) => (
                   <div key={t.id}>
-                    <strong style={{ color: 'var(--text-head)' }}>
-                      {t.name}
-                    </strong>
-                    <span style={{ color: 'var(--text-dim)' }}>
-                      {' '}
-                      · {t.category}
-                    </span>
-                    <p style={{ margin: '4px 0 0' }}>{t.description}</p>
+                    <strong className="link-list__title">{t.name}</strong>
+                    <span className="link-list__meta"> · {t.category}</span>
+                    <p className="link-list__body">{t.description}</p>
                   </div>
                 ))}
               </div>
@@ -172,21 +150,21 @@ export default function CountryPage() {
               <dt>Major cities</dt>
               <dd>{country.majorCities.join(', ')}</dd>
               <dt>Themes</dt>
-              <dd style={{ textTransform: 'capitalize' }}>
+              <dd className="is-capitalized">
                 {country.themes.map(titleCase).join(', ')}
               </dd>
             </dl>
           </div>
 
           {country.neighboringCountries.length > 0 && (
-            <div style={{ marginTop: 20 }}>
+            <div className="aside-block">
               <h4>Neighbours</h4>
-              <ul style={{ paddingLeft: 0, listStyle: 'none' }}>
+              <ul className="link-list link-list--compact">
                 {country.neighboringCountries.map((id) => {
                   const neighbour = countries.find((c) => c.id === id)
                   if (!neighbour) return null
                   return (
-                    <li key={id} style={{ marginBottom: 6 }}>
+                    <li key={id}>
                       <Link to={`/countries/${neighbour.slug}`}>
                         {neighbour.flag} {neighbour.name}
                       </Link>
@@ -198,18 +176,16 @@ export default function CountryPage() {
           )}
 
           {country.relatedCountries.length > 0 && (
-            <div style={{ marginTop: 20 }}>
+            <div className="aside-block">
               <h4>Related countries</h4>
-              <ul style={{ paddingLeft: 0, listStyle: 'none' }}>
+              <ul className="link-list link-list--compact">
                 {country.relatedCountries
-                  .filter(
-                    (id) => !country.neighboringCountries.includes(id),
-                  )
+                  .filter((id) => !country.neighboringCountries.includes(id))
                   .map((id) => {
                     const related = countries.find((c) => c.id === id)
                     if (!related) return null
                     return (
-                      <li key={id} style={{ marginBottom: 6 }}>
+                      <li key={id}>
                         <Link to={`/countries/${related.slug}`}>
                           {related.flag} {related.name}
                         </Link>

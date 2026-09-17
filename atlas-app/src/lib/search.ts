@@ -10,6 +10,11 @@ function matches(haystack: string[], needle: string): boolean {
   return haystack.some((h) => h.toLowerCase().includes(needle))
 }
 
+function countrySlug(id: string): string {
+  const c = countries.find((x) => x.id === id)
+  return c?.slug ?? ''
+}
+
 export function buildIndex(): SearchResult[] {
   const results: SearchResult[] = []
 
@@ -83,12 +88,18 @@ export function buildIndex(): SearchResult[] {
   return results
 }
 
-function countrySlug(id: string): string {
-  const c = countries.find((x) => x.id === id)
-  return c?.slug ?? ''
+/** Lazily-built, module-level cache of the search index. */
+let cachedIndex: SearchResult[] | null = null
+
+export function getSearchIndex(): SearchResult[] {
+  if (!cachedIndex) cachedIndex = buildIndex()
+  return cachedIndex
 }
 
-export function search(query: string, index = buildIndex()): SearchResult[] {
+export function search(
+  query: string,
+  index: SearchResult[] = getSearchIndex(),
+): SearchResult[] {
   const q = query.trim().toLowerCase()
   if (!q) return []
   return index

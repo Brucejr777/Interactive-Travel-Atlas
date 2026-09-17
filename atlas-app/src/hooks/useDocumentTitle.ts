@@ -1,11 +1,11 @@
 import { useEffect } from 'react'
 
+const BASE_TITLE = 'Interactive Travel Atlas'
+
 export function useDocumentTitle(title: string) {
   useEffect(() => {
-    const previous = document.title
-    document.title = title ? `${title} · Interactive Travel Atlas` : 'Interactive Travel Atlas'
-    return () => {
-      document.title = previous
-    }
+    document.title = title ? `${title} · ${BASE_TITLE}` : BASE_TITLE
+    // No cleanup: the next page's effect will overwrite the title anyway,
+    // and restoring the previous title causes a visible flash.
   }, [title])
 }

@@ -23,7 +23,11 @@ export default function ThemeFilter({ themes = allThemes, className }: Props) {
   const toggleTheme = useAtlasStore((s) => s.toggleTheme)
 
   return (
-    <div className={cx('chip-row', className)} role="group" aria-label="Filter by theme">
+    <div
+      className={cx('chip-row', className)}
+      role="group"
+      aria-label="Filter by theme"
+    >
       {themes.map((theme) => {
         const active = activeThemes.includes(theme)
         return (
