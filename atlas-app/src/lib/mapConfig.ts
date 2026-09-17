@@ -19,14 +19,41 @@ export const mapProjection = {
   center: [0, 20] as [number, number],
 }
 
-export const mapColors = {
+/** The set of colours the map needs for a single render pass. */
+export interface MapPalette {
+  /** Land for countries that are not part of the atlas. */
+  landFill: string
+  /** Hover highlight. */
+  landHoverFill: string
+  /** Selected-country highlight. */
+  landSelectedFill: string
+  /** Country outline. */
+  stroke: string
+  /** Countries present in the atlas but not selected/hovered/visited. */
+  activeFill: string
+  /** Countries the user has marked as visited. */
+  visitedFill: string
+}
+
+const lightPalette: MapPalette = {
   landFill: '#cbd5e1',
-  landFillDark: '#334155',
   landHoverFill: '#a855f7',
   landSelectedFill: '#7c3aed',
   stroke: '#ffffff',
-  strokeDark: '#0b0d12',
   activeFill: '#6366f1',
-  /** Fill used for countries the user has marked as visited. */
   visitedFill: '#16a34a',
+}
+
+const darkPalette: MapPalette = {
+  landFill: '#334155',
+  landHoverFill: '#c084fc',
+  landSelectedFill: '#a855f7',
+  stroke: '#0b0d12',
+  activeFill: '#818cf8',
+  visitedFill: '#22c55e',
+}
+
+/** Return the map palette for the given resolved theme. */
+export function getMapPalette(theme: 'light' | 'dark'): MapPalette {
+  return theme === 'dark' ? darkPalette : lightPalette
 }

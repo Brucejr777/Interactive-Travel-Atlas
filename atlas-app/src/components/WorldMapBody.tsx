@@ -7,7 +7,12 @@ import {
 } from 'react-simple-maps'
 import type { GeoJsonObject } from 'geojson'
 import worldData from 'world-atlas/countries-110m.json'
-import { isoNumericToCountryId, mapColors } from '../lib/mapConfig'
+import {
+  getMapPalette,
+  isoNumericToCountryId,
+  mapProjection,
+} from '../lib/mapConfig'
+import { useResolvedTheme } from '../hooks/useResolvedTheme'
 import type { WorldMapProps } from './WorldMap'
 
 export default function WorldMapBody({
@@ -18,6 +23,9 @@ export default function WorldMapBody({
   onSelect,
   onHover,
 }: WorldMapProps) {
+  const theme = useResolvedTheme()
+  const palette = getMapPalette(theme)
+
   const byId = useMemo(
     () => new Map(countries.map((c) => [c.id, c])),
     [countries],
@@ -38,7 +46,7 @@ export default function WorldMapBody({
 
   return (
     <ComposableMap
-      projectionConfig={{ scale: 147, center: [0, 20] }}
+      projectionConfig={mapProjection}
       style={{ width: '100%', height: 'auto' }}
     >
       <ZoomableGroup>
@@ -55,14 +63,14 @@ export default function WorldMapBody({
               const isVisited = !!countryId && visitedSet.has(countryId)
 
               const fill = isSelected
-                ? mapColors.landSelectedFill
+                ? palette.landSelectedFill
                 : isHovered
-                  ? mapColors.landHoverFill
+                  ? palette.landHoverFill
                   : isVisited
-                    ? mapColors.visitedFill
+                    ? palette.visitedFill
                     : hasCountry
-                      ? mapColors.activeFill
-                      : mapColors.landFill
+                      ? palette.activeFill
+                      : palette.landFill
 
               return (
                 <Geography
@@ -78,7 +86,7 @@ export default function WorldMapBody({
                   }}
                   onMouseLeave={() => onHover?.(null)}
                   fill={fill}
-                  stroke={mapColors.stroke}
+                  stroke={palette.stroke}
                   strokeWidth={0.4}
                   style={{
                     outline: 'none',

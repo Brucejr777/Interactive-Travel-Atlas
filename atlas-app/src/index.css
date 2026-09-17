@@ -217,7 +217,7 @@ main {
 .site-header__inner {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   height: var(--header-h);
   position: relative;
 }
@@ -231,6 +231,7 @@ main {
   letter-spacing: -0.02em;
   font-size: 1.05rem;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 .brand:hover {
   color: var(--text-head);
@@ -260,7 +261,7 @@ main {
   border-radius: var(--radius);
   cursor: pointer;
   color: var(--text-head);
-  margin-left: auto;
+  flex-shrink: 0;
 }
 .nav-toggle:hover {
   background: var(--surface-2);
@@ -270,7 +271,7 @@ main {
   display: flex;
   align-items: center;
   gap: 4px;
-  margin-left: 8px;
+  flex-shrink: 0;
 }
 
 .nav-link {
@@ -290,11 +291,19 @@ main {
   background: var(--accent-soft);
 }
 
+/* Random-country + favourites (hidden on mobile). */
 .site-header__actions {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-left: 4px;
+  flex-shrink: 0;
+}
+
+/* Theme toggle — always visible, even on mobile. */
+.site-header__theme {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 .icon-btn {
@@ -353,7 +362,8 @@ main {
 
 .site-header__search {
   margin-left: auto;
-  flex: 0 1 320px;
+  flex: 1 1 auto;
+  max-width: 420px;
   min-width: 0;
 }
 
@@ -379,6 +389,11 @@ main {
     display: none;
   }
 
+  .site-header__search {
+    margin-left: auto;
+    max-width: none;
+  }
+
   .site-nav {
     display: none;
     position: absolute;
@@ -393,15 +408,10 @@ main {
     border-bottom: 1px solid var(--border);
     box-shadow: var(--shadow);
     margin-left: 0;
+    z-index: 5;
   }
   .site-nav.is-open {
     display: flex;
-  }
-
-  .site-header__search {
-    flex: 1 1 auto;
-    margin-left: 0;
-    min-width: 0;
   }
 }
 

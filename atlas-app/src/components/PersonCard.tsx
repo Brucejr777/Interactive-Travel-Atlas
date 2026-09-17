@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Link } from 'react-router-dom'
 import type { Person } from '../lib/types'
 import { titleCase } from '../lib/utils'
@@ -7,7 +8,7 @@ interface Props {
   person: Person
 }
 
-export default function PersonCard({ person }: Props) {
+function PersonCardBase({ person }: Props) {
   const dates =
     person.birth && person.death
       ? `${person.birth}–${person.death}`
@@ -34,3 +35,6 @@ export default function PersonCard({ person }: Props) {
     </div>
   )
 }
+
+const PersonCard = memo(PersonCardBase)
+export default PersonCard

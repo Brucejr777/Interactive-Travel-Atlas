@@ -34,6 +34,8 @@ export const favoriteKey = (kind: FavoriteKind, id: string): string =>
   `${kind}:${id}`
 
 const MAX_RECENTS = 12
+const STORAGE_KEY = 'atlas:user:v1'
+const STORAGE_VERSION = 1
 
 export const useUserStore = create<UserState>()(
   persist(
@@ -90,7 +92,10 @@ export const useUserStore = create<UserState>()(
       setTheme: (theme) => set({ theme }),
     }),
     {
-      name: 'atlas:user:v1',
+      name: STORAGE_KEY,
+      version: STORAGE_VERSION,
+      // v0 → v1: schema unchanged; keep the user's data intact.
+      migrate: (persisted) => persisted as UserState,
     },
   ),
 )

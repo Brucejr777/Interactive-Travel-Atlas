@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import { useResolvedTheme } from '../hooks/useResolvedTheme'
 import { countries } from '../data'
 import { useAtlasStore } from '../store/useAtlasStore'
 import { useUserStore } from '../store/useUserStore'
-import { mapColors } from '../lib/mapConfig'
+import { getMapPalette } from '../lib/mapConfig'
 import WorldMap from '../components/WorldMap'
 import ThemeFilter from '../components/ThemeFilter'
 import RegionFilter from '../components/RegionFilter'
@@ -11,6 +12,9 @@ import CountryCard from '../components/CountryCard'
 
 export default function AtlasPage() {
   useDocumentTitle('Atlas')
+
+  const theme = useResolvedTheme()
+  const palette = getMapPalette(theme)
 
   const selectedCountryId = useAtlasStore((s) => s.selectedCountryId)
   const hoveredCountryId = useAtlasStore((s) => s.hoveredCountryId)
@@ -75,28 +79,28 @@ export default function AtlasPage() {
             <span className="map-legend__item">
               <span
                 className="map-legend__swatch"
-                style={{ background: mapColors.activeFill }}
+                style={{ background: palette.activeFill }}
               />
               In atlas
             </span>
             <span className="map-legend__item">
               <span
                 className="map-legend__swatch"
-                style={{ background: mapColors.landHoverFill }}
+                style={{ background: palette.landHoverFill }}
               />
               Hovered
             </span>
             <span className="map-legend__item">
               <span
                 className="map-legend__swatch"
-                style={{ background: mapColors.landSelectedFill }}
+                style={{ background: palette.landSelectedFill }}
               />
               Selected
             </span>
             <span className="map-legend__item">
               <span
                 className="map-legend__swatch"
-                style={{ background: mapColors.visitedFill }}
+                style={{ background: palette.visitedFill }}
               />
               Visited
             </span>

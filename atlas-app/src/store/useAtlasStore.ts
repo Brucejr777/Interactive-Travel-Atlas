@@ -16,6 +16,11 @@ interface AtlasState {
   clearFilters: () => void
 }
 
+interface PersistedAtlasState {
+  activeThemes: Theme[]
+  activeRegions: Region[]
+}
+
 export const useAtlasStore = create<AtlasState>()(
   persist(
     (set) => ({
@@ -43,12 +48,15 @@ export const useAtlasStore = create<AtlasState>()(
     }),
     {
       name: 'atlas:filters:v1',
+      version: 1,
       // Only persist the filter selections; transient hover/selection state
       // should always start empty.
-      partialize: (state) => ({
+      partialize: (state): PersistedAtlasState => ({
         activeThemes: state.activeThemes,
         activeRegions: state.activeRegions,
       }),
+      // v0 → v1: schema unchanged; keep the user's filters intact.
+      migrate: (persisted) => persisted as PersistedAtlasState,
     },
   ),
 )

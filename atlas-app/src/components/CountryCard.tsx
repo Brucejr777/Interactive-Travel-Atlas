@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Link } from 'react-router-dom'
 import type { Country } from '../lib/types'
 import { formatArea, formatNumber } from '../lib/utils'
@@ -8,7 +9,7 @@ interface Props {
   country: Country
 }
 
-export default function CountryCard({ country }: Props) {
+function CountryCardBase({ country }: Props) {
   const visited = useUserStore((s) => s.visited.includes(country.id))
 
   return (
@@ -37,3 +38,6 @@ export default function CountryCard({ country }: Props) {
     </div>
   )
 }
+
+const CountryCard = memo(CountryCardBase)
+export default CountryCard

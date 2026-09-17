@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Link } from 'react-router-dom'
 import type { Landmark } from '../lib/types'
 import FavoriteButton from './FavoriteButton'
@@ -6,14 +7,10 @@ interface Props {
   landmark: Landmark
 }
 
-export default function LandmarkCard({ landmark }: Props) {
+function LandmarkCardBase({ landmark }: Props) {
   return (
     <div className="card-wrap">
-      <Link
-        to={`/landmarks/${landmark.id}`}
-        className="card"
-        id={landmark.id}
-      >
+      <Link to={`/landmarks/${landmark.id}`} className="card" id={landmark.id}>
         <span className="tag">{landmark.type}</span>
         <h3 className="card__title" style={{ marginTop: 10 }}>
           {landmark.name}
@@ -33,3 +30,6 @@ export default function LandmarkCard({ landmark }: Props) {
     </div>
   )
 }
+
+const LandmarkCard = memo(LandmarkCardBase)
+export default LandmarkCard

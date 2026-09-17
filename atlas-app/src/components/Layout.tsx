@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { NavLink, Outlet, Link } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { NavLink, Outlet, Link, useLocation } from 'react-router-dom'
 import { cx } from '../lib/utils'
 import SearchBar from './SearchBar'
 import ScrollTopButton from './ScrollTopButton'
@@ -7,6 +7,7 @@ import RandomCountryButton from './RandomCountryButton'
 import ThemeToggle from './ThemeToggle'
 import { useUserStore } from '../store/useUserStore'
 import { useTheme } from '../hooks/useTheme'
+import { useOnClickOutside } from '../hooks/useOnClickOutside'
 
 const navItems = [
   { to: '/', label: 'Home', end: true },
@@ -22,11 +23,23 @@ const navItems = [
 export default function Layout() {
   const [open, setOpen] = useState(false)
   const favCount = useUserStore((s) => s.favorites.length)
+  const headerRef = useRef<HTMLElement>(null)
+  const location = useLocation()
 
   useTheme()
 
+  // Close the mobile menu when clicking outside the header.
+  useOnClickOutside(headerRef, () => setOpen(false), open)
+
+  // Close on route change so the next page never opens with the menu open.
+  useEffect(() => {
+    setOpen(false)
+  }, [location.pathname])
+
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') setOpen(false)
+
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         const input = document.getElementById(
           'global-search',
@@ -44,7 +57,7 @@ export default function Layout() {
 
   return (
     <div className="app-shell">
-      <header className="site-header">
+      <header className="site-header" ref={headerRef}>
         <div className="container site-header__inner">
           <Link
             to="/"
@@ -57,33 +70,6 @@ export default function Layout() {
             </span>
             <span className="brand__label">Interactive Travel Atlas</span>
           </Link>
-
-          <button
-            type="button"
-            className="nav-toggle"
-            aria-expanded={open}
-            aria-controls="primary-nav"
-            aria-label={open ? 'Close navigation' : 'Open navigation'}
-            onClick={() => setOpen((o) => !o)}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              {open ? (
-                <path
-                  d="M6 6l12 12M18 6L6 18"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              ) : (
-                <path
-                  d="M4 7h16M4 12h16M4 17h16"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              )}
-            </svg>
-          </button>
 
           <nav
             id="primary-nav"
@@ -104,6 +90,10 @@ export default function Layout() {
               </NavLink>
             ))}
           </nav>
+
+          <div className="site-header__search">
+            <SearchBar />
+          </div>
 
           <div className="site-header__actions">
             <RandomCountryButton />
@@ -131,11 +121,36 @@ export default function Layout() {
             </Link>
           </div>
 
-          <ThemeToggle />
-
-          <div className="site-header__search">
-            <SearchBar />
+          <div className="site-header__theme">
+            <ThemeToggle />
           </div>
+
+          <button
+            type="button"
+            className="nav-toggle"
+            aria-expanded={open}
+            aria-controls="primary-nav"
+            aria-label={open ? 'Close navigation' : 'Open navigation'}
+            onClick={() => setOpen((o) => !o)}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              {open ? (
+                <path
+                  d="M6 6l12 12M18 6L6 18"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              ) : (
+                <path
+                  d="M4 7h16M4 12h16M4 17h16"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              )}
+            </svg>
+          </button>
         </div>
       </header>
 
